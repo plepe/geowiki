@@ -23,4 +23,5 @@ $include['js']=array(
   'inc/bootstrap.js',
 );
 $include['css']=array(
+  'inc/style.css',
 );

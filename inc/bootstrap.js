@@ -1,4 +1,35 @@
+var editor_div;
+var property_form;
+
+function show_property_form(layer) {
+  property_form = new form('data', {
+    'title': {
+      'name': 'Title',
+      'type': 'text'
+    }
+  });
+
+  if(layer.properties)
+    property_form.set_data(layer.properties);
+  else
+    property_form.set_data({ 'title': null });
+
+  editor_div.innerHTML = '';
+  property_form.show(editor_div);
+
+  var submit = document.createElement('input');
+  submit.type = 'button';
+  submit.value = 'Save';
+  submit.onclick = function(layer, data) {
+    layer.properties = property_form.get_data();
+  }.bind(this, layer);
+
+  editor_div.appendChild(submit);
+}
+
 window.onload = function() {
+  editor_div = document.getElementById('property-editor');
+
   var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
     osmAttrib = '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     osm = L.tileLayer(osmUrl, {maxZoom: 18, attribution: osmAttrib}),
@@ -46,5 +77,11 @@ window.onload = function() {
     }
 
     drawnItems.addLayer(layer);
+
+    layer.on('click', function(layer) {
+      show_property_form(layer);
+    }.bind(this, layer));
+
+    show_property_form(layer);
   });
 }	
