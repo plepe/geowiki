@@ -20,6 +20,7 @@ $include=array();
 $include['php']=array(
 );
 $include['js']=array(
+  'inc/bootstrap.js',
 );
 $include['css']=array(
 );
