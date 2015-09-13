@@ -47,10 +47,21 @@ function show_property_form(layer) {
     });
   }.bind(this, layer);
   editor_div.appendChild(submit);
+
+  var submit = document.createElement('input');
+  submit.type = 'button';
+  submit.value = 'Close';
+  submit.onclick = function(layer, data) {
+    editor_div.style.display = 'none';
+  }.bind(this, layer);
+  editor_div.appendChild(submit);
+
+  editor_div.style.display = 'block';
 }
 
 window.onload = function() {
   editor_div = document.getElementById('property-editor');
+  editor_div.style.display = 'none';
 
   var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
     osmAttrib = '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors',
