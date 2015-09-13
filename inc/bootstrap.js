@@ -1,5 +1,6 @@
 var editor_div;
 var property_form;
+var drawnItems;
 
 function show_property_form(layer) {
   property_form = new form('data', {
@@ -61,6 +62,10 @@ function show_property_form(layer) {
   editor_div.style.display = 'block';
 }
 
+function download() {
+  alert(JSON.stringify(drawnItems.toGeoJSON(), null, '    '));
+}
+
 window.onload = function() {
   editor_div = document.getElementById('property-editor');
   editor_div.style.display = 'none';
@@ -70,7 +75,7 @@ window.onload = function() {
     osm = L.tileLayer(osmUrl, {maxZoom: 18, attribution: osmAttrib}),
     map = new L.Map('map', {layers: [osm], center: new L.LatLng(-37.7772, 175.2756), zoom: 15 });
 
-  var drawnItems = new L.FeatureGroup();
+  drawnItems = new L.FeatureGroup();
   map.addLayer(drawnItems);
 
   var drawControl = new L.Control.Draw({
@@ -121,4 +126,8 @@ window.onload = function() {
 
     show_property_form(layer);
   });
+
+  var top_left = document.getElementsByClassName('leaflet-top leaflet-left');
+  if(top_left.length)
+    top_left[0].appendChild(document.getElementById('menu'));
 }	
