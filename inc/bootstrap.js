@@ -75,7 +75,7 @@ window.onload = function() {
     osmAttrib = '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     osm = L.tileLayer(osmUrl, {maxZoom: 18, attribution: osmAttrib});
 
-  map = new L.Map('map', {layers: [osm], center: new L.LatLng(-37.7772, 175.2756), zoom: 15 });
+  map = new L.Map('map', {layers: [osm], center: new L.LatLng(0, 0), zoom: 2 });
 
   ajax('load', { id: 'testdata' }, null, load_data);
 }
@@ -138,6 +138,8 @@ function load_data(data) {
 
     show_property_form(layer);
   });
+
+  map.fitBounds(drawnItems.getBounds());
 
   var top_left = document.getElementsByClassName('leaflet-top leaflet-left');
   if(top_left.length)
