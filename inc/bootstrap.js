@@ -1,6 +1,7 @@
 var editor_div;
 var property_form;
 var drawnItems;
+var map;
 
 function show_property_form(layer) {
   property_form = new form('data', {
@@ -72,10 +73,14 @@ window.onload = function() {
 
   var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
     osmAttrib = '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    osm = L.tileLayer(osmUrl, {maxZoom: 18, attribution: osmAttrib}),
-    map = new L.Map('map', {layers: [osm], center: new L.LatLng(-37.7772, 175.2756), zoom: 15 });
+    osm = L.tileLayer(osmUrl, {maxZoom: 18, attribution: osmAttrib});
 
-  var data = {};
+  map = new L.Map('map', {layers: [osm], center: new L.LatLng(-37.7772, 175.2756), zoom: 15 });
+
+  ajax('load', { id: 'testdata' }, null, load_data);
+}
+
+function load_data(data) {
   drawnItems = new L.GeoJSON(data, {
     onEachFeature: function(feature, layer) {
       layer.on('click', function(layer) {
@@ -137,4 +142,4 @@ window.onload = function() {
   var top_left = document.getElementsByClassName('leaflet-top leaflet-left');
   if(top_left.length)
     top_left[0].appendChild(document.getElementById('menu'));
-}	
+}
