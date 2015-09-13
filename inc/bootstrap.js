@@ -44,11 +44,7 @@ function show_property_form(layer) {
     var data = property_form.get_data();
     layer.feature.properties = data;
 
-    layer.setStyle({
-      'color': data['stroke'],
-      'weight': data['stroke-width'],
-      'opacity': data['stroke-opacity']
-    });
+    layer.setStyle(apply_properties(data));
 
     save();
   }.bind(this, layer);
@@ -63,6 +59,14 @@ function show_property_form(layer) {
   editor_div.appendChild(submit);
 
   editor_div.style.display = 'block';
+}
+
+function apply_properties(data) {
+  return {
+    'color': data['stroke'],
+    'weight': data['stroke-width'],
+    'opacity': data['stroke-opacity']
+  };
 }
 
 function download() {
@@ -95,6 +99,9 @@ function load_data(data) {
       layer.on('click', function(layer) {
         show_property_form(layer);
       }.bind(this, layer));
+    },
+    style: function(feature) {
+      return apply_properties(feature.properties);
     }
   });
   map.addLayer(drawnItems);
