@@ -78,6 +78,7 @@ window.onload = function() {
   map = new L.Map('map', {layers: [osm], center: new L.LatLng(0, 0), zoom: 2 });
 
   ajax('load', { id: 'testdata' }, null, load_data);
+  //load_data(null);
 }
 
 function load_data(data) {
@@ -139,7 +140,8 @@ function load_data(data) {
     show_property_form(layer);
   });
 
-  map.fitBounds(drawnItems.getBounds());
+  if(data !== null)
+    map.fitBounds(drawnItems.getBounds());
 
   var top_left = document.getElementsByClassName('leaflet-top leaflet-left');
   if(top_left.length)
