@@ -75,7 +75,14 @@ window.onload = function() {
     osm = L.tileLayer(osmUrl, {maxZoom: 18, attribution: osmAttrib}),
     map = new L.Map('map', {layers: [osm], center: new L.LatLng(-37.7772, 175.2756), zoom: 15 });
 
-  drawnItems = new L.FeatureGroup();
+  var data = {};
+  drawnItems = new L.GeoJSON(data, {
+    onEachFeature: function(feature, layer) {
+      layer.on('click', function(layer) {
+        show_property_form(layer);
+      }.bind(this, layer));
+    }
+  });
   map.addLayer(drawnItems);
 
   var drawControl = new L.Control.Draw({
