@@ -49,6 +49,8 @@ function show_property_form(layer) {
       'weight': data['stroke-width'],
       'opacity': data['stroke-opacity']
     });
+
+    save();
   }.bind(this, layer);
   editor_div.appendChild(submit);
 
@@ -65,6 +67,12 @@ function show_property_form(layer) {
 
 function download() {
   alert(JSON.stringify(drawnItems.toGeoJSON(), null, '    '));
+}
+
+function save() {
+  ajax('save', { id: 'testdata' }, json_readable_encode(drawnItems.toGeoJSON()), function() {
+    // saved.
+  });
 }
 
 window.onload = function() {
