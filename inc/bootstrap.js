@@ -21,8 +21,8 @@ function show_property_form(layer) {
     },
   });
 
-  if(layer.properties)
-    property_form.set_data(layer.properties);
+  if(layer.feature.properties)
+    property_form.set_data(layer.feature.properties);
   else {
     property_form.set_data({
       'title': '',
@@ -39,11 +39,13 @@ function show_property_form(layer) {
   submit.type = 'button';
   submit.value = 'Save';
   submit.onclick = function(layer, data) {
-    layer.properties = property_form.get_data();
+    var data = property_form.get_data();
+    layer.feature.properties = data;
+
     layer.setStyle({
-      'color': layer.properties.stroke,
-      'weight': layer.properties['stroke-width'],
-      'opacity': layer.properties['stroke-opacity']
+      'color': data['stroke'],
+      'weight': data['stroke-width'],
+      'opacity': data['stroke-opacity']
     });
   }.bind(this, layer);
   editor_div.appendChild(submit);
@@ -104,6 +106,8 @@ window.onload = function() {
   map.on('draw:created', function (e) {
     var type = e.layerType,
         layer = e.layer;
+
+    layer.feature = {};
 
     if(type === 'marker') {
       layer.bindPopup('A popup!');
