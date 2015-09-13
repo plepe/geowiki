@@ -6,13 +6,31 @@ function show_property_form(layer) {
     'title': {
       'name': 'Title',
       'type': 'text'
-    }
+    },
+    'stroke': {
+      'name': 'Stroke Color',
+      'type': 'color'
+    },
+    'stroke-width': {
+      'name': 'Stroke Width',
+      'type': 'float'
+    },
+    'stroke-opacity': {
+      'name': 'Stroke Opacity',
+      'type': 'float'
+    },
   });
 
   if(layer.properties)
     property_form.set_data(layer.properties);
-  else
-    property_form.set_data({ 'title': null });
+  else {
+    property_form.set_data({
+      'title': '',
+      'stroke': '#b00b00',
+      'stroke-width': 3,
+      'stroke-opacity': 1.0
+    });
+  }
 
   editor_div.innerHTML = '';
   property_form.show(editor_div);
@@ -22,8 +40,12 @@ function show_property_form(layer) {
   submit.value = 'Save';
   submit.onclick = function(layer, data) {
     layer.properties = property_form.get_data();
+    layer.setStyle({
+      'color': layer.properties.stroke,
+      'weight': layer.properties['stroke-width'],
+      'opacity': layer.properties['stroke-opacity']
+    });
   }.bind(this, layer);
-
   editor_div.appendChild(submit);
 }
 
