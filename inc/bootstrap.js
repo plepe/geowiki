@@ -77,12 +77,29 @@ function apply_properties(data) {
   };
 }
 
+function get_geojson_data() {
+  var features = [];
+  var items = drawnItems.getLayers();
+
+  for(var i = 0; i < items.length; i++) {
+    var d = items[i].toGeoJSON();
+    d.type = 'Feature';
+
+    features.push(d);
+  }
+
+  return {
+    'type': 'FeatureCollection',
+    'features': features
+  };
+}
+
 function download() {
-  alert(JSON.stringify(drawnItems.toGeoJSON(), null, '    '));
+  alert(JSON.stringify(get_geojson_data(), null, '    '));
 }
 
 function save() {
-  ajax('save', page_param, json_readable_encode(drawnItems.toGeoJSON()), function() {
+  ajax('save', page_param, json_readable_encode(get_geojson_data()), function() {
     // saved.
   });
 }
