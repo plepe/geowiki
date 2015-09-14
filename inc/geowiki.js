@@ -141,7 +141,11 @@ geowiki.prototype.show_property_form = function(layer) {
   if(layer.feature.properties)
     this.property_form.set_data(layer.feature.properties);
   else {
-    this.property_form.set_data(this.default_properties.polyline);
+    this.property_form.set_data(
+      layer instanceof L.Polygon ? this.default_properties.polygon :
+      layer instanceof L.Polyline ? this.default_properties.polyline :
+      this.default_properties.marker
+    );
   }
 
   this.editor_div.innerHTML = '';
