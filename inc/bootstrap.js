@@ -46,8 +46,11 @@ function show_property_form(layer) {
     layer.feature.properties = data;
 
     layer.setStyle(apply_properties(data));
+    layer.editing.disable();
 
     save();
+
+    editor_div.style.display = 'none';
   }.bind(this, layer);
   editor_div.appendChild(submit);
 
@@ -55,9 +58,13 @@ function show_property_form(layer) {
   submit.type = 'button';
   submit.value = 'Close';
   submit.onclick = function(layer, data) {
+    layer.editing.disable();
+
     editor_div.style.display = 'none';
   }.bind(this, layer);
   editor_div.appendChild(submit);
+
+  layer.editing.enable();
 
   editor_div.style.display = 'block';
 }
