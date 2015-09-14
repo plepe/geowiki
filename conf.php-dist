@@ -1,1 +1,7 @@
 <?php
+/**
+ * Where will all the maps be saved. Make sure, that this directory is
+ * writeable by the webserver. If Apache2 configuration is correct, the data/
+ * directory should be secure against direct access. 
+ */
+$data_path = "data/";
