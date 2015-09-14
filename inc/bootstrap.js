@@ -1,3 +1,4 @@
+var page_param;
 var editor_div;
 var property_form;
 var drawnItems;
@@ -74,12 +75,14 @@ function download() {
 }
 
 function save() {
-  ajax('save', { id: 'testdata' }, json_readable_encode(drawnItems.toGeoJSON()), function() {
+  ajax('save', page_param, json_readable_encode(drawnItems.toGeoJSON()), function() {
     // saved.
   });
 }
 
 window.onload = function() {
+  page_param = page_resolve_url_params();
+
   editor_div = document.getElementById('property-editor');
   editor_div.style.display = 'none';
 
@@ -89,7 +92,7 @@ window.onload = function() {
 
   map = new L.Map('map', {layers: [osm], center: new L.LatLng(0, 0), zoom: 2 });
 
-  ajax('load', { id: 'testdata' }, null, load_data);
+  ajax('load', page_param, null, load_data);
   //load_data(null);
 }
 
