@@ -69,9 +69,7 @@ geowiki.prototype.property_form_def = function(layer) {
 geowiki.prototype.load_data = function(data) {
   this.drawItems = new L.GeoJSON(data, {
     onEachFeature: function(feature, layer) {
-      layer.on('click', function(layer) {
-        this.show_property_form(layer);
-      }.bind(this, layer));
+      this.create_popup(layer);
     }.bind(this),
     style: function(feature) {
       return this.apply_properties(feature.properties);
@@ -118,21 +116,33 @@ geowiki.prototype.load_data = function(data) {
 
     layer.feature = {};
 
-    if(type === 'marker') {
-      layer.bindPopup('A popup!');
-    }
+    this.create_popup(layer);
 
     this.drawItems.addLayer(layer);
-
-    layer.on('click', function(layer) {
-      this.show_property_form(layer);
-    }.bind(this, layer));
 
     this.show_property_form(layer);
   }.bind(this));
 
   if(data !== null)
     this.map.fitBounds(this.drawItems.getBounds());
+}
+
+geowiki.prototype.create_popup = function(layer) {
+  var div = document.createElement('div');
+
+  if(layer.feature && layer.feature.properties) {
+    if(layer.feature.properties.title) {
+      div.appendChild(document.createTextNode(layer.feature.properties.title));
+      div.appendChild(document.createElement('br'));
+    }
+  }
+
+  var edit_link = document.createElement('a');
+  edit_link.onclick = this.show_property_form.bind(this, layer);
+  edit_link.appendChild(document.createTextNode('edit'));
+  div.appendChild(edit_link);
+
+  layer.bindPopup(div);
 }
 
 geowiki.prototype.show_property_form = function(layer) {
@@ -161,6 +171,10 @@ geowiki.prototype.show_property_form = function(layer) {
     if(layer.setStyle)
       layer.setStyle(this.apply_properties(data));
     layer.editing.disable();
+
+    var pos = layer._popup._latlng;
+    this.create_popup(layer);
+    layer.openPopup(pos);
 
     this.save();
 
