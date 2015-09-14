@@ -8,6 +8,23 @@ function geowiki(map, param) {
   ajax('load', this.param, null, this.load_data.bind(this));
 }
 
+geowiki.prototype.default_properties = {
+  'polyline': {
+    'stroke': '#ff0000',
+    'stroke-width': 2,
+    'stroke-opacity': 0.8
+  },
+  'polygon': {
+    'stroke': '#ff0000',
+    'stroke-width': 2,
+    'stroke-opacity': 0.8,
+    'fill': '#7f0000',
+    'fill-opacity': 0.2
+  },
+  'marker': {
+  }
+};
+
 geowiki.prototype.load_data = function(data) {
   this.drawItems = new L.GeoJSON(data, {
     onEachFeature: function(feature, layer) {
@@ -31,18 +48,21 @@ geowiki.prototype.load_data = function(data) {
           color: '#b00b00',
           timeout: 1000
 	},
-	shapeOptions: {
-          color: '#bada55'
-	},
+        shapeOptions: this.apply_properties(this.default_properties.polygon),
 	showArea: true
       },
       polyline: {
-        metric: false
+        metric: false,
+        shapeOptions: this.apply_properties(this.default_properties.polyline)
       },
       circle: {
-        shapeOptions: {
-          color: '#662d91'
-        }
+        shapeOptions: this.apply_properties(this.default_properties.polygon)
+      },
+      rectangle: {
+        shapeOptions: this.apply_properties(this.default_properties.polygon)
+      },
+      marker: {
+        shapeOptions: this.apply_properties(this.default_properties.marker)
       }
     },
     edit: {
@@ -97,12 +117,7 @@ geowiki.prototype.show_property_form = function(layer) {
   if(layer.feature.properties)
     this.property_form.set_data(layer.feature.properties);
   else {
-    this.property_form.set_data({
-      'title': '',
-      'stroke': '#b00b00',
-      'stroke-width': 3,
-      'stroke-opacity': 1.0
-    });
+    this.property_form.set_data(this.default_properties.polyline);
   }
 
   this.editor_div.innerHTML = '';
@@ -143,11 +158,19 @@ geowiki.prototype.apply_properties = function(data) {
   if(!data)
     return {};
 
-  return {
-    'color': data['stroke'],
-    'weight': data['stroke-width'],
-    'opacity': data['stroke-opacity']
-  };
+  var ret = {};
+  if('stroke' in data)
+    ret.color = data['stroke'];
+  if('stroke-width' in data)
+    ret.weight = data['stroke-width'];
+  if('stroke-opacity' in data)
+    ret.opacity= data['stroke-opacity'];
+  if('fill' in data)
+    ret.fillColor = data['fill'];
+  if('fill-opacity' in data)
+    ret.fillOpacity = data['fill-opacity'];
+
+  return ret;
 }
 
 geowiki.prototype.get_geojson_data = function() {
