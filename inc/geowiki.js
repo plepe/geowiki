@@ -25,6 +25,47 @@ geowiki.prototype.default_properties = {
   }
 };
 
+geowiki.prototype.property_form_def = function(layer) {
+  var ret = {
+    'title': {
+      'name': 'Title',
+      'type': 'text'
+    },
+  };
+
+  if(layer instanceof L.Polygon) {
+    ret['fill'] = {
+      'name': 'Fill Color',
+      'type': 'color'
+    };
+    ret['fill-opacity'] = {
+      'name': 'Fill Opacity',
+      'type': 'float'
+    };
+  }
+
+  if(layer instanceof L.Polyline) {
+    ret['stroke'] = {
+      'name': 'Stroke Color',
+      'type': 'color'
+    };
+    ret['stroke-width'] = {
+      'name': 'Stroke Width',
+      'type': 'float'
+    };
+    ret['stroke-opacity'] = {
+      'name': 'Stroke Opacity',
+      'type': 'float'
+    };
+  }
+
+  if(layer instanceof L.Marker) {
+  }
+
+  return ret;
+
+};
+
 geowiki.prototype.load_data = function(data) {
   this.drawItems = new L.GeoJSON(data, {
     onEachFeature: function(feature, layer) {
@@ -95,24 +136,7 @@ geowiki.prototype.load_data = function(data) {
 }
 
 geowiki.prototype.show_property_form = function(layer) {
-  this.property_form = new form('data', {
-    'title': {
-      'name': 'Title',
-      'type': 'text'
-    },
-    'stroke': {
-      'name': 'Stroke Color',
-      'type': 'color'
-    },
-    'stroke-width': {
-      'name': 'Stroke Width',
-      'type': 'float'
-    },
-    'stroke-opacity': {
-      'name': 'Stroke Opacity',
-      'type': 'float'
-    },
-  });
+  this.property_form = new form('data', this.property_form_def(layer));
 
   if(layer.feature.properties)
     this.property_form.set_data(layer.feature.properties);
