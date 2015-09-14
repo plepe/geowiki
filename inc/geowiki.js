@@ -158,7 +158,8 @@ geowiki.prototype.show_property_form = function(layer) {
     var data = this.property_form.get_data();
     layer.feature.properties = data;
 
-    layer.setStyle(this.apply_properties(data));
+    if(layer.setStyle)
+      layer.setStyle(this.apply_properties(data));
     layer.editing.disable();
 
     this.save();
