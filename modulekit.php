@@ -23,6 +23,7 @@ $include['php']=array(
 $include['js']=array(
   'inc/bootstrap.js',
   'inc/geowiki.js',
+  'inc/functions.js',
 );
 $include['css']=array(
   'inc/style.css',

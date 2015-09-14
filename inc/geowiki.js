@@ -31,6 +31,10 @@ geowiki.prototype.property_form_def = function(layer) {
       'name': 'Title',
       'type': 'text'
     },
+    'description': {
+      'name': 'Description',
+      'type': 'textarea'
+    }
   };
 
   if(layer instanceof L.Polygon) {
@@ -132,8 +136,19 @@ geowiki.prototype.create_popup = function(layer) {
 
   if(layer.feature && layer.feature.properties) {
     if(layer.feature.properties.title) {
-      div.appendChild(document.createTextNode(layer.feature.properties.title));
-      div.appendChild(document.createElement('br'));
+      var wrap = document.createElement('div');
+      wrap.className = 'title';
+      div.appendChild(wrap);
+
+      wrap.innerHTML = htmlspecialchars(layer.feature.properties.title);
+    }
+
+    if(layer.feature.properties.description) {
+      var wrap = document.createElement('div');
+      wrap.className = 'description';
+      div.appendChild(wrap);
+
+      wrap.innerHTML = htmlspecialchars(layer.feature.properties.description);
     }
   }
 
