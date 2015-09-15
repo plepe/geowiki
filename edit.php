@@ -17,21 +17,12 @@
 		<link rel="stylesheet" href="leaflet.draw.ie.css" />
 	<![endif]-->
 	
-	<script src="lib/leaflet/leaflet-src.js"></script>
-	<script src="lib/leaflet.draw/leaflet.draw-src.js"></script>
+	<script src="lib/leaflet/leaflet.js"></script>
+	<script src="lib/leaflet.draw/leaflet.draw.js"></script>
 </head>
 <body>
-Available maps:<ul>
-<?php
-$d = opendir($data_path);
-while($r = readdir($d)) {
-  if(substr($r, 0, 1) != ".") {
-    $r = pathinfo($r);
-    print "<li><a href='edit.php?id={$r['filename']}'>{$r['filename']}</a></li>\n";
-  }
-}
-closedir($d);
-?>
-</ul>
+	<div id="map" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></div>
+        <div id="property-editor"></div>
+        <div id="menu" class='leaflet-control'><a download='data.json' href='javascript:download()'>Download</a></div>
 </body>
 </html>

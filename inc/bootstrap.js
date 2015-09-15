@@ -8,6 +8,9 @@ window.onload = function() {
     osmAttrib = '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     osm = L.tileLayer(osmUrl, {maxZoom: 18, attribution: osmAttrib});
 
+  if(!document.getElementById('map'))
+    return;
+
   map = new L.Map('map', {layers: [osm], center: new L.LatLng(0, 0), zoom: 2 });
 
   new geowiki(map, page_param);
