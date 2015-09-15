@@ -33,5 +33,8 @@ while($r = readdir($d)) {
 closedir($d);
 ?>
 </ul>
+Create new:<ul>
+<li><a href='edit.php?id=<?php print md5(uniqid()); ?>'>empty map</a></li>
+</ul>
 </body>
 </html>
