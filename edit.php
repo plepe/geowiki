@@ -22,7 +22,8 @@
 </head>
 <body>
         <div id="header">
-          <div id="title"><?php print $_REQUEST['id']; ?></div>
+          <a href='.'><img id='logo' src='images/logo.svg' alt='Geowiki'></a>
+          <span id="title"><?php print $_REQUEST['id']; ?></span>
         </div>
 	<div id="map"></div>
         <div id="property-editor"></div>
