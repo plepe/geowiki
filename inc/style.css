@@ -7,6 +7,12 @@ body {
 #title {
   margin-left: 40px;
 }
+#title a {
+  margin-left: 4px;
+}
+#title a img {
+  vertical-align: middle;
+}
 #logo {
   position: absolute;
   top: 2px;

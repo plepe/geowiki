@@ -1,6 +1,7 @@
 function geowiki(map, param) {
   this.map = map;
   this.param = param;
+  this.properties = null;
 
   this.editor_div = document.getElementById('property-editor');
   this.editor_div.style.display = 'none';
@@ -71,6 +72,10 @@ geowiki.prototype.property_form_def = function(layer) {
 };
 
 geowiki.prototype.load_data = function(data) {
+  this.properties = data.properties;
+  if(!this.properties)
+    this.properties = { title: this.param.id };
+
   this.drawItems = new L.GeoJSON(data, {
     onEachFeature: function(feature, layer) {
       this.create_popup(layer);
@@ -129,6 +134,14 @@ geowiki.prototype.load_data = function(data) {
 
   if(data !== null)
     this.map.fitBounds(this.drawItems.getBounds());
+
+  var title = document.getElementById('title');
+  var a = document.createElement('a');
+  a.href = '#';
+  a.onclick = this.edit_map_properties.bind(this);
+  a.innerHTML = "<img src='images/edit.png'>";
+
+  title.appendChild(a);
 }
 
 geowiki.prototype.create_popup = function(layer) {
@@ -158,6 +171,36 @@ geowiki.prototype.create_popup = function(layer) {
   div.appendChild(edit_link);
 
   layer.bindPopup(div);
+}
+
+geowiki.prototype.edit_map_properties = function(layer) {
+  var form_def = {
+    'title': {
+      'type': 'text',
+      'name': 'Title'
+    }
+  };
+
+  this.map_properties_form = new form('map_properties', form_def);
+
+  this.map_properties_form.set_data(this.properties);
+
+  this.editor_div.innerHTML = '';
+  this.map_properties_form.show(this.editor_div);
+
+  var submit = document.createElement('input');
+  submit.type = 'button';
+  submit.value = 'Save';
+  submit.onclick = function() {
+    this.properties = this.map_properties_form.get_data();
+
+    this.save();
+
+    this.editor_div.style.display = 'none';
+  }.bind(this);
+  this.editor_div.appendChild(submit);
+
+  this.editor_div.style.display = 'block';
 }
 
 geowiki.prototype.show_property_form = function(layer) {
@@ -244,6 +287,7 @@ geowiki.prototype.get_geojson_data = function() {
 
   return {
     'type': 'FeatureCollection',
+    'properties': this.properties,
     'features': features
   };
 }
