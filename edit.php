@@ -21,7 +21,10 @@
 	<script src="lib/leaflet.draw/leaflet.draw.js"></script>
 </head>
 <body>
-	<div id="map" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></div>
+        <div id="header">
+          <div id="title"><?php print $_REQUEST['id']; ?></div>
+        </div>
+	<div id="map"></div>
         <div id="property-editor"></div>
         <div id="menu" class='leaflet-control'><a download='data.json' href='javascript:download()'>Download</a></div>
 </body>
