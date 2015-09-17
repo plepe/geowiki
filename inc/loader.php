@@ -1,5 +1,11 @@
 <?php
 function check_param($param) {
+  if(!isset($param['id']))
+    return false;
+
+  if($param['id'] == '')
+    return false;
+
   if(preg_match("/\-\(\)'\"`\[\]\n\t!$%&\+\*,\.\/:;=<>\?\\\{\}\^\|\~/", $param['id']))
     return false;
 
@@ -19,7 +25,14 @@ function ajax_save($param, $postdata) {
   global $data_path;
 
   if(!check_param($param))
-    return null;
+    return array(
+      'saved' => false,
+      'error' => 'Invalid ID',
+    );
 
   file_put_contents("{$data_path}{$param['id']}.json", $postdata);
+
+  return array(
+    'saved' => true,
+  );
 }

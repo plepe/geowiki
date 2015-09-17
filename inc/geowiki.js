@@ -297,7 +297,18 @@ geowiki.prototype.download = function() {
 }
 
 geowiki.prototype.save = function() {
-  ajax('save', page_param, json_readable_encode(this.get_geojson_data()), function() {
+  ajax('save', page_param, json_readable_encode(this.get_geojson_data()), function(result) {
+    if(!result) {
+      alert("An unknown error occured when saving data!");
+    }
+
+    if(result.saved === true)
+      return;
+
+    if(result.error) {
+      alert("An error occured when saving: " +  result.error);
+    }
+
     // saved.
-  });
+  }.bind(this));
 }
