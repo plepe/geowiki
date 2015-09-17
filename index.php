@@ -19,6 +19,8 @@
 	
 	<script src="lib/leaflet/leaflet-src.js"></script>
 	<script src="lib/leaflet.draw/leaflet.draw-src.js"></script>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 </head>
 <body>
 Available maps:<ul>
