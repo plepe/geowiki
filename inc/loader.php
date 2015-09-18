@@ -1,17 +1,20 @@
 <?php
 function git_exec($cmd) {
   global $data_path;
+  $user = "Anonymous";
+  $email = "someone@example.com";
 
   $x = new AdvExec();
-  return $x->exec("git {$cmd}", $data_path);
+  return $x->exec("git " .
+           "-c user.name=" . shell_escape($user) . " " .
+           "-c user.email=" . shell_escape($email) . " " .
+           $cmd, $data_path);
 }
 
 function git_commit($msg) {
   $user = "Anonymous";
   $email = "someone@example.com";
   return git_exec(
-           "-c user.name=" . shell_escape($user) . " " .
-           "-c user.email=" . shell_escape($email) . " " .
            "commit " .
            "-m " . shell_escape($message) . " " .
            "--allow-empty-message ".
