@@ -1,4 +1,28 @@
 <?php
+function git_exec($cmd) {
+  global $data_path;
+
+  $x = new AdvExec();
+  return $x->exec("git {$cmd}", $data_path);
+}
+
+function git_commit($msg) {
+  $user = "Anonymous";
+  $email = "someone@example.com";
+  return git_exec(
+           "-c user.name=" . shell_escape($user) . " " .
+           "-c user.email=" . shell_escape($email) . " " .
+           "commit " .
+           "-m " . shell_escape($message) . " " .
+           "--allow-empty-message ".
+           "--author=" . shell_escape("{$user} <{$email}>")
+  );
+}
+
+function git_init() {
+  return git_exec("init");
+}
+
 function check_param($param) {
   if(!isset($param['id']))
     return false;
@@ -17,6 +41,8 @@ function ajax_load($param) {
 
   if(!check_param($param))
     return null;
+
+  git_init();
 
   $path = "{$data_path}/{$param['id']}";
 
@@ -47,6 +73,8 @@ function ajax_save_all($param, $postdata) {
       'error' => 'Invalid ID',
     );
 
+  git_init();
+
   // create directory for map data
   $path = "{$data_path}/{$param['id']}";
   if(!is_dir($path))
@@ -65,6 +93,9 @@ function ajax_save_all($param, $postdata) {
     file_put_contents("{$path}/_{$feature['id']}.json", json_readable_encode($feature));
   }
 
+  git_exec("add " . shell_escape($param['id']));
+  git_commit("save all");
+
   return array(
     'saved' => true,
   );
@@ -72,6 +103,8 @@ function ajax_save_all($param, $postdata) {
 
 function ajax_save_map_properties($param, $postdata) {
   global $data_path;
+
+  git_init();
 
   if(!check_param($param))
     return array(
@@ -88,7 +121,7 @@ function ajax_save_map_properties($param, $postdata) {
         'error' => 'Invalid ID',
       );
 
-    rename("{$data_path}/{$param['id']}", "{$data_path}/{$data['id']}");
+    git_exec("mv " . shell_escape($param['id']) . " " . shell_escape($data['id']));
 
     $param['id'] = $data['id'];
   }
@@ -98,8 +131,10 @@ function ajax_save_map_properties($param, $postdata) {
   if(!is_dir($path))
     mkdir($path);
 
-
   file_put_contents("{$path}/map.json", json_readable_encode($data));
+
+  git_exec("add " . shell_escape($param['id']));
+  git_commit("save map properties");
 
   return array(
     'saved' => true,
@@ -116,6 +151,8 @@ function ajax_save_feature($param, $postdata) {
       'error' => 'Invalid ID',
     );
 
+  git_init();
+
   // create directory for map data
   $path = "{$data_path}/{$param['id']}";
   if(!is_dir($path))
@@ -128,6 +165,9 @@ function ajax_save_feature($param, $postdata) {
   }
 
   file_put_contents("{$path}/_{$feature['id']}.json", json_readable_encode($feature));
+
+  git_exec("add " . shell_escape($param['id']));
+  git_commit("save feature");
 
   return array(
     'saved' => true,

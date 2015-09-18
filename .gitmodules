@@ -13,3 +13,6 @@
 [submodule "lib/modulekit/ajax"]
 	path = lib/modulekit/ajax
 	url = https://github.com/plepe/modulekit-ajax.git
+[submodule "lib/modulekit/adv_exec"]
+	path = lib/modulekit/adv_exec
+	url = https://github.com/plepe/adv_exec.git
