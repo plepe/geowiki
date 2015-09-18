@@ -407,10 +407,13 @@ geowiki.prototype.save_feature = function(layer) {
   var d = layer.toGeoJSON();
   d.type = 'Feature';
 
-  ajax('save_feature', page_param, json_readable_encode(d), function(result) {
+  ajax('save_feature', page_param, json_readable_encode(d), function(layer, result) {
     if(!result) {
       alert("An unknown error occured when saving data!");
     }
+
+    if(result.feature_id)
+      layer.feature.id = result.feature_id;
 
     if(result.saved === true) {
       if(result.rev)
@@ -424,7 +427,7 @@ geowiki.prototype.save_feature = function(layer) {
     }
 
     // saved.
-  }.bind(this));
+  }.bind(this, layer));
 }
 
 geowiki.prototype.save_remove_feature = function(layer) {

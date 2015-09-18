@@ -268,6 +268,7 @@ function ajax_save_feature($param, $postdata) {
     return array(
       'saved' => false,
       'rev' => $rev,
+      'feature_id' => $feature['id'],
       'error' => "Conflict when merging changes. Please reload and re-do changes.",
     );
   }
@@ -275,6 +276,7 @@ function ajax_save_feature($param, $postdata) {
   return array(
     'saved' => true,
     'rev' => $rev,
+    'feature_id' => $feature['id'],
   );
 }
 
