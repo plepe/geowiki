@@ -35,6 +35,22 @@ function git_checkout($rev=null) {
   git_exec('checkout ' . shell_escape($rev));
 }
 
+function git_merge() {
+  $rev = git_rev();
+
+  git_checkout();
+  $result = git_exec('merge --no-commit --no-ff ' . shell_escape($rev));
+  git_exec('merge --abort');
+
+  file_put_contents("/tmp/foo", print_r($result, 1), FILE_APPEND);
+  if($result[0] == 0) {
+    git_exec('merge ' . shell_escape($rev));
+    return true;
+  }
+
+  return false;
+}
+
 function check_param($param) {
   if(!isset($param['id']))
     return false;
@@ -115,9 +131,19 @@ function ajax_save_all($param, $postdata) {
   git_exec("add " . shell_escape($param['id']));
   git_commit("save all");
 
+  $rev = git_rev();
+
+  if(!git_merge()) {
+    return array(
+      'saved' => false,
+      'rev' => $rev,
+      'error' => "Conflict when merging changes. Please reload and re-do changes.",
+    );
+  }
+
   return array(
     'saved' => true,
-    'rev' => git_rev(),
+    'rev' => $rev,
   );
 }
 
@@ -156,10 +182,20 @@ function ajax_save_map_properties($param, $postdata) {
   git_exec("add " . shell_escape($param['id']));
   git_commit("save map properties");
 
+  $rev = git_rev();
+
+  if(!git_merge()) {
+    return array(
+      'saved' => false,
+      'rev' => $rev,
+      'error' => "Conflict when merging changes. Please reload and re-do changes.",
+    );
+  }
+
   return array(
     'saved' => true,
+    'rev' => $rev,
     'id' => $param['id'],
-    'rev' => git_rev(),
   );
 }
 
@@ -173,6 +209,9 @@ function ajax_save_feature($param, $postdata) {
     );
 
   git_init();
+
+  if(array_key_exists('rev', $param))
+    git_checkout($param['rev']);
 
   // create directory for map data
   $path = "{$data_path}/{$param['id']}";
@@ -190,8 +229,18 @@ function ajax_save_feature($param, $postdata) {
   git_exec("add " . shell_escape($param['id']));
   git_commit("save feature");
 
+  $rev = git_rev();
+
+  if(!git_merge()) {
+    return array(
+      'saved' => false,
+      'rev' => $rev,
+      'error' => "Conflict when merging changes. Please reload and re-do changes.",
+    );
+  }
+
   return array(
     'saved' => true,
-    'rev' => git_rev(),
+    'rev' => $rev,
   );
 }
