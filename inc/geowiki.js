@@ -7,6 +7,8 @@ function geowiki(map, param) {
   this.editor_div.style.display = 'none';
 
   ajax('load', this.param, null, this.load_data.bind(this));
+
+  window.setInterval(this.load_changes.bind(this), 10000);
 }
 
 geowiki.prototype.default_properties = {
@@ -143,6 +145,17 @@ geowiki.prototype.load_data = function(data) {
   a.innerHTML = "<img src='images/edit.png'>";
 
   title.appendChild(a);
+}
+
+geowiki.prototype.load_changes = function() {
+  ajax("load_changes", this.param, null, function(data) {
+    this.param.rev = data.rev;
+
+    if(data.properties) {
+      this.properties = data.properties;
+      // TODO: update properties (title, ...)
+    }
+  }.bind(this));
 }
 
 geowiki.prototype.create_popup = function(layer) {

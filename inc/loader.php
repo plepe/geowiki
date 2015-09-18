@@ -99,6 +99,39 @@ function ajax_load($param) {
   return $data;
 }
 
+function ajax_load_changes($param) {
+  global $data_path;
+
+  $result = git_exec("log --name-only --pretty=oneline --full-index " . shell_escape($param['rev']) . "..master " . shell_escape($param['id']) . " | grep -vE '^[0-9a-f]{40} ' | sort | uniq");
+
+  if($result[1] == "") {
+    return array(
+      'rev' => git_rev(),
+    );
+  }
+
+  $ret = array(
+    'id' => $param['id'],
+    'rev' => git_rev(),
+    'type' => 'FeatureCollection',
+    'features' => array(),
+  );
+
+  foreach(explode("\n", $result[1]) as $file) {
+    if($file == "") {
+      // do nothing
+    }
+    elseif(basename($file) == "map.json") {
+      $ret['properties'] = json_decode(file_get_contents("{$data_path}/{$file}"), true);
+    }
+    else {
+      $ret['features'][] = json_decode(file_get_contents("{$data_path}/{$file}"), true);
+    }
+  }
+
+  return $ret;
+}
+
 function ajax_save_all($param, $postdata) {
   global $data_path;
 
