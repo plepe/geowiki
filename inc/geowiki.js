@@ -155,6 +155,24 @@ geowiki.prototype.load_changes = function() {
       this.properties = data.properties;
       // TODO: update properties (title, ...)
     }
+
+    if(data.features && data.features.length) {
+      var current_features = this.drawItems.getLayers();
+
+      for(var i = 0; i < data.features.length; i++) {
+        var feature = data.features[i];
+
+        //check if feature is already loaded -> remove
+        for(var j = 0; j < current_features.length; j++) {
+          if(current_features[i].feature.id == feature.id)
+            this.drawItems.removeLayer(current_features[i]);
+        }
+
+        // add new/modified items
+        this.drawItems.addData(feature);
+      }
+    }
+
   }.bind(this));
 }
 
