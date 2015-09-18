@@ -1,7 +1,6 @@
 function geowiki(map, param) {
   this.map = map;
   this.param = param;
-  this.rev = null;
   this.properties = null;
 
   this.editor_div = document.getElementById('property-editor');
@@ -73,7 +72,7 @@ geowiki.prototype.property_form_def = function(layer) {
 };
 
 geowiki.prototype.load_data = function(data) {
-  this.rev = data.rev;
+  this.param.rev = data.rev;
   this.properties = data.properties;
   if(!this.properties)
     this.properties = { title: this.param.id };
@@ -322,7 +321,7 @@ geowiki.prototype.save_all = function() {
 
     if(result.saved === true) {
       if(result.rev)
-        this.rev = result.rev;
+        this.param.rev = result.rev;
 
       return;
     }
@@ -348,7 +347,7 @@ geowiki.prototype.save_map_properties = function() {
       }
 
       if(result.rev)
-        this.rev = result.rev;
+        this.param.rev = result.rev;
 
       return;
     }
@@ -372,7 +371,7 @@ geowiki.prototype.save_feature = function(layer) {
 
     if(result.saved === true) {
       if(result.rev)
-        this.rev = result.rev;
+        this.param.rev = result.rev;
 
       return;
     }
