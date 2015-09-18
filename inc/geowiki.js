@@ -178,10 +178,22 @@ geowiki.prototype.edit_map_properties = function(layer) {
     'title': {
       'type': 'text',
       'name': 'Title'
-    }
+    },
+    'id': {
+      'type': 'text',
+      'name': 'ID',
+      'check': [ 'not_regexp', /[\-\(\)\'"`\[\]\n\t!$%&\+\*,\.\/:;=<>\?\\\{\}\^\|\~]/, "Do not use special characters!" ]
+    },
+    'description': {
+      'type': 'textarea',
+      'name': 'Description'
+    },
   };
 
   this.map_properties_form = new form('map_properties', form_def);
+
+  if(!this.properties.id)
+    this.properties.id = this.param.id;
 
   this.map_properties_form.set_data(this.properties);
 
@@ -239,6 +251,8 @@ geowiki.prototype.show_property_form = function(layer) {
     this.save_feature(layer);
 
     this.editor_div.style.display = 'none';
+
+    // TODO: update title
   }.bind(this, layer);
   this.editor_div.appendChild(submit);
 
@@ -321,8 +335,14 @@ geowiki.prototype.save_map_properties = function() {
       alert("An unknown error occured when saving data!");
     }
 
-    if(result.saved === true)
+    if(result.saved === true) {
+      if(result.id) {
+        this.param.id = result.id;
+        history.replaceState(this.param, null, "edit.php?id=" + encodeURIComponent(this.param.id));
+      }
+
       return;
+    }
 
     if(result.error) {
       alert("An error occured when saving: " +  result.error);

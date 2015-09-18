@@ -79,17 +79,31 @@ function ajax_save_map_properties($param, $postdata) {
       'error' => 'Invalid ID',
     );
 
+  $data = json_decode($postdata, true);
+
+  if(array_key_exists('id', $data) && ($data['id'] != $param['id'])) {
+    if(!check_param($data))
+      return array(
+        'saved' => false,
+        'error' => 'Invalid ID',
+      );
+
+    rename("{$data_path}/{$param['id']}", "{$data_path}/{$data['id']}");
+
+    $param['id'] = $data['id'];
+  }
+
   // create directory for map data
   $path = "{$data_path}/{$param['id']}";
   if(!is_dir($path))
     mkdir($path);
 
-  $data = json_decode($postdata, true);
 
   file_put_contents("{$path}/map.json", json_readable_encode($data));
 
   return array(
     'saved' => true,
+    'id' => $param['id'],
   );
 }
 
