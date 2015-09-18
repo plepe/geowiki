@@ -277,3 +277,44 @@ function ajax_save_feature($param, $postdata) {
     'rev' => $rev,
   );
 }
+
+function ajax_save_remove_feature($param, $postdata) {
+  global $data_path;
+
+  if(!check_param($param))
+    return array(
+      'saved' => false,
+      'error' => 'Invalid ID',
+    );
+
+  git_init();
+
+  if(array_key_exists('rev', $param))
+    git_checkout($param['rev']);
+
+  // create directory for map data
+  $path = "{$data_path}/{$param['id']}";
+  if(!is_dir($path))
+    mkdir($path);
+
+  $feature_id = $postdata;
+
+  git_exec("rm " . shell_escape("{$param['id']}/_" . $feature_id . '.json'));
+
+  git_commit("remove feature");
+
+  $rev = git_rev();
+
+  if(!git_merge()) {
+    return array(
+      'saved' => false,
+      'rev' => $rev,
+      'error' => "Conflict when merging changes. Please reload and re-do changes.",
+    );
+  }
+
+  return array(
+    'saved' => true,
+    'rev' => $rev,
+  );
+}

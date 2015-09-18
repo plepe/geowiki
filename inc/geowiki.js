@@ -298,6 +298,18 @@ geowiki.prototype.show_property_form = function(layer) {
   }.bind(this, layer);
   this.editor_div.appendChild(submit);
 
+  var submit = document.createElement('input');
+  submit.type = 'button';
+  submit.value = 'Remove';
+  submit.onclick = function(layer, data) {
+    layer.editing.disable();
+    this.drawItems.removeLayer(layer);
+    this.save_remove_feature(layer);
+
+    this.editor_div.style.display = 'none';
+  }.bind(this, layer);
+  this.editor_div.appendChild(submit);
+
   layer.editing.enable();
 
   this.property_form.resize();
@@ -396,6 +408,27 @@ geowiki.prototype.save_feature = function(layer) {
   d.type = 'Feature';
 
   ajax('save_feature', page_param, json_readable_encode(d), function(result) {
+    if(!result) {
+      alert("An unknown error occured when saving data!");
+    }
+
+    if(result.saved === true) {
+      if(result.rev)
+        this.param.rev = result.rev;
+
+      return;
+    }
+
+    if(result.error) {
+      alert("An error occured when saving: " +  result.error);
+    }
+
+    // saved.
+  }.bind(this));
+}
+
+geowiki.prototype.save_remove_feature = function(layer) {
+  ajax('save_remove_feature', page_param, layer.feature.id, function(result) {
     if(!result) {
       alert("An unknown error occured when saving data!");
     }
