@@ -194,7 +194,7 @@ geowiki.prototype.edit_map_properties = function(layer) {
   submit.onclick = function() {
     this.properties = this.map_properties_form.get_data();
 
-    this.save();
+    this.save_map_properties();
 
     this.editor_div.style.display = 'none';
   }.bind(this);
@@ -234,7 +234,7 @@ geowiki.prototype.show_property_form = function(layer) {
     this.create_popup(layer);
     layer.openPopup(pos);
 
-    this.save();
+    this.save_feature(layer);
 
     this.editor_div.style.display = 'none';
   }.bind(this, layer);
@@ -296,8 +296,45 @@ geowiki.prototype.download = function() {
   alert(JSON.stringify(this.get_geojson_data(), null, '    '));
 }
 
-geowiki.prototype.save = function() {
-  ajax('save', page_param, json_readable_encode(this.get_geojson_data()), function(result) {
+geowiki.prototype.save_all = function() {
+  ajax('save_all', page_param, json_readable_encode(this.get_geojson_data()), function(result) {
+    if(!result) {
+      alert("An unknown error occured when saving data!");
+    }
+
+    if(result.saved === true)
+      return;
+
+    if(result.error) {
+      alert("An error occured when saving: " +  result.error);
+    }
+
+    // saved.
+  }.bind(this));
+}
+
+geowiki.prototype.save_map_properties = function() {
+  ajax('save_map_properties', page_param, json_readable_encode(this.properties), function(result) {
+    if(!result) {
+      alert("An unknown error occured when saving data!");
+    }
+
+    if(result.saved === true)
+      return;
+
+    if(result.error) {
+      alert("An error occured when saving: " +  result.error);
+    }
+
+    // saved.
+  }.bind(this));
+}
+
+geowiki.prototype.save_feature = function(layer) {
+  var d = layer.toGeoJSON();
+  d.type = 'Feature';
+
+  ajax('save_feature', page_param, json_readable_encode(d), function(result) {
     if(!result) {
       alert("An unknown error occured when saving data!");
     }

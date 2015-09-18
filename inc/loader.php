@@ -38,7 +38,7 @@ function ajax_load($param) {
   return $data;
 }
 
-function ajax_save($param, $postdata) {
+function ajax_save_all($param, $postdata) {
   global $data_path;
 
   if(!check_param($param))
@@ -64,6 +64,56 @@ function ajax_save($param, $postdata) {
 
     file_put_contents("{$path}/_{$feature['id']}.json", json_readable_encode($feature));
   }
+
+  return array(
+    'saved' => true,
+  );
+}
+
+function ajax_save_map_properties($param, $postdata) {
+  global $data_path;
+
+  if(!check_param($param))
+    return array(
+      'saved' => false,
+      'error' => 'Invalid ID',
+    );
+
+  // create directory for map data
+  $path = "{$data_path}/{$param['id']}";
+  if(!is_dir($path))
+    mkdir($path);
+
+  $data = json_decode($postdata, true);
+
+  file_put_contents("{$path}/map.json", json_readable_encode($data));
+
+  return array(
+    'saved' => true,
+  );
+}
+
+function ajax_save_feature($param, $postdata) {
+  global $data_path;
+
+  if(!check_param($param))
+    return array(
+      'saved' => false,
+      'error' => 'Invalid ID',
+    );
+
+  // create directory for map data
+  $path = "{$data_path}/{$param['id']}";
+  if(!is_dir($path))
+    mkdir($path);
+
+  $feature = json_decode($postdata, true);
+
+  if(!check_param($feature)) {
+    $feature['id'] = md5(uniqid());
+  }
+
+  file_put_contents("{$path}/_{$feature['id']}.json", json_readable_encode($feature));
 
   return array(
     'saved' => true,
