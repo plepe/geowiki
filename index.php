@@ -29,7 +29,17 @@ $d = opendir($data_path);
 while($r = readdir($d)) {
   if(substr($r, 0, 1) != ".") {
     $r = pathinfo($r);
-    print "<li><a href='edit.php?id={$r['filename']}'>{$r['filename']}</a></li>\n";
+    $name = $r['filename'];
+
+    $c = file_get_contents("{$data_path}/{$r['filename']}/map.json");
+    if($c) {
+      $c = json_decode($c, true);
+      if(is_array($c) && array_key_exists('title', $c)) {
+        $name = $c['title'];
+      }
+    }
+
+    print "<li><a href='edit.php?id={$r['filename']}'>{$name}</a></li>\n";
   }
 }
 closedir($d);

@@ -26,7 +26,20 @@
 <body>
         <div id="header">
           <a href='.'><img id='logo' src='images/logo.svg' alt='Geowiki'></a>
-          <span id="title"><?php print $_REQUEST['id']; ?></span>
+<?php
+$name = $_REQUEST['id'];
+
+if(check_param($_REQUEST)) {
+  $c = file_get_contents("{$data_path}/{$_REQUEST['id']}/map.json");
+  if($c) {
+    $c = json_decode($c, true);
+    if(is_array($c) && array_key_exists('title', $c)) {
+      $name = $c['title'];
+    }
+  }
+}
+?>
+          <span id="title"><?php print $name; ?></span>
         </div>
 	<div id="map"></div>
         <div id="property-editor"></div>
