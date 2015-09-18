@@ -186,6 +186,7 @@ geowiki.prototype.edit_map_properties = function(layer) {
   this.map_properties_form.set_data(this.properties);
 
   this.editor_div.innerHTML = '';
+  this.editor_div.style.display = 'block';
   this.map_properties_form.show(this.editor_div);
 
   var submit = document.createElement('input');
@@ -200,7 +201,7 @@ geowiki.prototype.edit_map_properties = function(layer) {
   }.bind(this);
   this.editor_div.appendChild(submit);
 
-  this.editor_div.style.display = 'block';
+  this.map_properties_form.resize();
 }
 
 geowiki.prototype.show_property_form = function(layer) {
@@ -217,6 +218,7 @@ geowiki.prototype.show_property_form = function(layer) {
   }
 
   this.editor_div.innerHTML = '';
+  this.editor_div.style.display = 'block';
   this.property_form.show(this.editor_div);
 
   var submit = document.createElement('input');
@@ -252,7 +254,7 @@ geowiki.prototype.show_property_form = function(layer) {
 
   layer.editing.enable();
 
-  this.editor_div.style.display = 'block';
+  this.property_form.resize();
 }
 
 geowiki.prototype.apply_properties = function(data) {
