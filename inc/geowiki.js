@@ -320,8 +320,12 @@ geowiki.prototype.save_all = function() {
       alert("An unknown error occured when saving data!");
     }
 
-    if(result.saved === true)
+    if(result.saved === true) {
+      if(result.rev)
+        this.rev = result.rev;
+
       return;
+    }
 
     if(result.error) {
       alert("An error occured when saving: " +  result.error);
@@ -343,6 +347,9 @@ geowiki.prototype.save_map_properties = function() {
         history.replaceState(this.param, null, "edit.php?id=" + encodeURIComponent(this.param.id));
       }
 
+      if(result.rev)
+        this.rev = result.rev;
+
       return;
     }
 
@@ -363,8 +370,12 @@ geowiki.prototype.save_feature = function(layer) {
       alert("An unknown error occured when saving data!");
     }
 
-    if(result.saved === true)
+    if(result.saved === true) {
+      if(result.rev)
+        this.rev = result.rev;
+
       return;
+    }
 
     if(result.error) {
       alert("An error occured when saving: " +  result.error);

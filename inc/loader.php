@@ -117,6 +117,7 @@ function ajax_save_all($param, $postdata) {
 
   return array(
     'saved' => true,
+    'rev' => git_rev(),
   );
 }
 
@@ -158,6 +159,7 @@ function ajax_save_map_properties($param, $postdata) {
   return array(
     'saved' => true,
     'id' => $param['id'],
+    'rev' => git_rev(),
   );
 }
 
@@ -190,5 +192,6 @@ function ajax_save_feature($param, $postdata) {
 
   return array(
     'saved' => true,
+    'rev' => git_rev(),
   );
 }
