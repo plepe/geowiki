@@ -23,6 +23,18 @@ function git_init() {
   return git_exec("init");
 }
 
+function git_rev() {
+  $result = git_exec("rev-parse HEAD");
+  return trim($result[1]);
+}
+
+function git_checkout($rev=null) {
+  if($rev === null)
+    $rev = 'master';
+
+  git_exec('checkout ' . shell_escape($rev));
+}
+
 function check_param($param) {
   if(!isset($param['id']))
     return false;
@@ -46,10 +58,15 @@ function ajax_load($param) {
 
   $path = "{$data_path}/{$param['id']}";
 
+  if(array_key_exists('rev', $param)) {
+    git_checkout($param['rev']);
+  }
+
   $map_properties = json_decode(file_get_contents("{$path}/map.json"), true);
 
   $data = array(
     'id' => $param['id'],
+    'rev' => git_rev(),
     'properties' => $map_properties,
     'features' => array(),
   );
@@ -60,6 +77,8 @@ function ajax_load($param) {
       $data['features'][] = json_decode(file_get_contents("{$path}/{$r}"), true);
   }
   closedir($d);
+
+  git_checkout();
 
   return $data;
 }

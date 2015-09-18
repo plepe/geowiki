@@ -1,6 +1,7 @@
 function geowiki(map, param) {
   this.map = map;
   this.param = param;
+  this.rev = null;
   this.properties = null;
 
   this.editor_div = document.getElementById('property-editor');
@@ -72,6 +73,7 @@ geowiki.prototype.property_form_def = function(layer) {
 };
 
 geowiki.prototype.load_data = function(data) {
+  this.rev = data.rev;
   this.properties = data.properties;
   if(!this.properties)
     this.properties = { title: this.param.id };
