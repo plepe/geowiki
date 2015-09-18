@@ -6,7 +6,7 @@ function check_param($param) {
   if($param['id'] == '')
     return false;
 
-  if(preg_match("/\-\(\)'\"`\[\]\n\t!$%&\+\*,\.\/:;=<>\?\\\{\}\^\|\~/", $param['id']))
+  if(preg_match("/[\-\(\)'\"`\[\]\n\t!$%&\+\*,\.\/:;=<>\?\\\{\}\^\|\~]/", $param['id']))
     return false;
 
   return true;
