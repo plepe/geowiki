@@ -164,12 +164,13 @@ geowiki.prototype.load_changes = function() {
 
         //check if feature is already loaded -> remove
         for(var j = 0; j < current_features.length; j++) {
-          if(current_features[i].feature.id == feature.id)
-            this.drawItems.removeLayer(current_features[i]);
+          if(current_features[j].feature.id == feature.id)
+            this.drawItems.removeLayer(current_features[j]);
         }
 
         // add new/modified items
-        this.drawItems.addData(feature);
+        if(feature.geometry)
+          this.drawItems.addData(feature);
       }
     }
 

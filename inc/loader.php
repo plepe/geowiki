@@ -125,7 +125,12 @@ function ajax_load_changes($param) {
       $ret['properties'] = json_decode(file_get_contents("{$data_path}/{$file}"), true);
     }
     else {
-      $ret['features'][] = json_decode(file_get_contents("{$data_path}/{$file}"), true);
+      if(file_exists("{$data_path}/{$file}")) {
+        $ret['features'][] = json_decode(file_get_contents("{$data_path}/{$file}"), true);
+      }
+      else {
+        $ret['features'][] = array("id" => substr(basename($file), 1, 32));
+      }
     }
   }
 
