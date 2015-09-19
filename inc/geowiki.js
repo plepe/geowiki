@@ -25,7 +25,8 @@ geowiki.prototype.default_properties = {
     'fill-opacity': 0.2
   },
   'marker': {
-    'marker-symbol': 'marker'
+    'marker-symbol': 'marker',
+    'marker-size': 'medium'
   }
 };
 
@@ -72,6 +73,12 @@ geowiki.prototype.property_form_def = function(layer) {
       'name': 'Marker Icon',
       'type': 'select',
       'values': maki_icons
+    };
+    ret['marker-size'] = {
+      'name': 'Marker size',
+      'type': 'radio',
+      'values': { 'small': 'small', 'medium': 'medium', 'large': 'large' },
+      'default': 'medium'
     };
   }
 
@@ -344,11 +351,13 @@ geowiki.prototype.apply_properties = function(data) {
     ret.fillColor = data['fill'];
   if('fill-opacity' in data)
     ret.fillOpacity = data['fill-opacity'];
-  if('marker-symbol' in data)
+  if('marker-symbol' in data) {
+    var size = { 'small': '12', 'medium': '18', 'large': '24' }[data['marker-size'] || 'medium'];
     ret.icon = L.icon({
-      iconUrl: 'icons/' + data['marker-symbol'] + '-24.svg',
-      iconSize: [ 24, 24 ]
+      iconUrl: 'icons/' + data['marker-symbol'] + '-' + size + '.svg',
+      iconSize: [ size, size ]
     });
+  }
 
   return ret;
 }
