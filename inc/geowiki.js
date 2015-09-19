@@ -71,14 +71,20 @@ geowiki.prototype.property_form_def = function(layer) {
 
   var maki_icons_values = {};
   for(var i = 0; i < maki_icons.length; i++) {
-    maki_icons_values[maki_icons[i].icon] = maki_icons[i].name;
+    maki_icons_values[maki_icons[i].icon] = {
+      name: maki_icons[i].name,
+      desc: "<img src='icons/" + maki_icons[i].icon + "-12.svg'>" +
+            "<img src='icons/" + maki_icons[i].icon + "-18.svg'>" +
+            "<img src='icons/" + maki_icons[i].icon + "-24.svg'>"
+    };
   }
 
   if(layer instanceof L.Marker) {
     ret['marker-symbol'] = {
       'name': 'Marker Icon',
       'type': 'select',
-      'values': maki_icons_values
+      'values': maki_icons_values,
+      'desc': "<a href='https://www.mapbox.com/maki/'>List of Maki icons</a>."
     };
     ret['marker-size'] = {
       'name': 'Marker size',
