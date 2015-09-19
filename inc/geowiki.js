@@ -106,9 +106,7 @@ geowiki.prototype.load_data = function(data) {
         metric: false,
         shapeOptions: this.apply_properties(this.default_properties.polyline)
       },
-      circle: {
-        shapeOptions: this.apply_properties(this.default_properties.polygon)
-      },
+      circle: false,
       rectangle: {
         shapeOptions: this.apply_properties(this.default_properties.polygon)
       },
