@@ -19,6 +19,7 @@ $load=array();
 $include=array();
 $include['php']=array(
   'inc/loader.php',
+  'inc/maki.php',
 );
 $include['js']=array(
   'inc/bootstrap.js',
