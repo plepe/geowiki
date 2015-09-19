@@ -39,3 +39,8 @@ body {
   font-size: 14px;
   font-weight: bold;
 }
+.leaflet-bar .custom-icon {
+  height: 16px;
+  width: 16px;
+  padding-top: 5px;
+}

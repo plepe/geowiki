@@ -44,8 +44,8 @@ if(check_param($_REQUEST)) {
         </div>
 	<div id="map"></div>
         <div id="property-editor"></div>
-        <div id="menu" class='leaflet-control'>
-          <a id="menu_download">Download</a>
+        <div id="menu" class='leaflet-control leaflet-bar'>
+          <a id="menu_download"><img class='custom-icon' src='images/data-transfer-download.svg' alt='Download' title='Download' /></a>
         </div>
 </body>
 </html>
