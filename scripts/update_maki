@@ -1,0 +1,38 @@
+#!/usr/bin/env python3
+import os
+import shutil
+import subprocess
+import json
+import glob
+
+if os.path.exists('maki'):
+    os.chdir('maki')
+    subprocess.call(["git", "pull"])
+    os.chdir('..')
+else:
+    subprocess.call(["git", "clone", "https://github.com/mapbox/maki.git"])
+
+for file in glob.glob('maki/src/*.svg'):
+    shutil.copy(file, 'icons/')
+shutil.copy('maki/_includes/maki.json', 'icons/')
+
+subprocess.call(["git", "add", "icons/"])
+
+# TODO: convert using Python libraries
+subprocess.getoutput("for i in `git diff --cached --name-only icons/ | grep '24.svg'` ; do echo $i ; convert $i `echo $i | cut -d. -f1`.png ; done")
+
+subprocess.call(["git", "add", "icons/"])
+
+file_list = json.loads(open('maki/_includes/maki.json').read())
+f = open('doc/Mapbox_Maki_icons.md', 'w')
+f.write('List of icons available from the [Mapbox Maki](https://www.mapbox.com/maki/) project:\n\n')
+f.write('| ID | Name | Icon (24px) |\n')
+f.write('|----|------|-------------|\n')
+
+for icon in file_list:
+    f.write('| {icon} | {name} | ![{name}](../icons/{icon}-24.png)\n'.format(**icon))
+
+f.close()
+
+subprocess.call(["git", "add", "doc/Mapbox_Maki_icons.md"])
+subprocess.call(["git", "status", "icons/", "doc/Mapbox_Maki_icons.md"])
