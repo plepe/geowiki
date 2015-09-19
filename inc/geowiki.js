@@ -117,7 +117,9 @@ geowiki.prototype.load_data = function(data) {
       }
     },
     edit: {
-      featureGroup: this.drawItems
+      featureGroup: this.drawItems,
+      edit: false,
+      remove: false
     }
   });
   this.map.addControl(this.drawControl);
