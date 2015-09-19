@@ -69,11 +69,16 @@ geowiki.prototype.property_form_def = function(layer) {
     };
   }
 
+  var maki_icons_values = {};
+  for(var i = 0; i < maki_icons.length; i++) {
+    maki_icons_values[maki_icons[i].icon] = maki_icons[i].name;
+  }
+
   if(layer instanceof L.Marker) {
     ret['marker-symbol'] = {
       'name': 'Marker Icon',
       'type': 'select',
-      'values': maki_icons
+      'values': maki_icons_values
     };
     ret['marker-size'] = {
       'name': 'Marker size',
