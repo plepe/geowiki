@@ -172,6 +172,10 @@ geowiki.prototype.load_data = function(data) {
   if(data !== null)
     this.map.fitBounds(this.drawItems.getBounds());
 
+  this.update_map_properties();
+}
+
+geowiki.prototype.update_map_properties = function() {
   var title = document.getElementById('title');
   var a = document.createElement('a');
   a.href = '#';
