@@ -44,6 +44,8 @@ if(check_param($_REQUEST)) {
         </div>
 	<div id="map"></div>
         <div id="property-editor"></div>
-        <div id="menu" class='leaflet-control'><a download='data.json' href='javascript:download()'>Download</a></div>
+        <div id="menu" class='leaflet-control'>
+          <a id="menu_download">Download</a>
+        </div>
 </body>
 </html>

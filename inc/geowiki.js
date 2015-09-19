@@ -183,6 +183,9 @@ geowiki.prototype.update_map_properties = function() {
   a.innerHTML = "<img src='images/edit.png'>";
 
   title.appendChild(a);
+
+  var a = document.getElementById('menu_download');
+  a.href = 'download.php?id=' + this.param.id;
 }
 
 geowiki.prototype.load_changes = function() {
@@ -402,10 +405,6 @@ geowiki.prototype.get_geojson_data = function() {
     'properties': this.properties,
     'features': features
   };
-}
-
-geowiki.prototype.download = function() {
-  alert(JSON.stringify(this.get_geojson_data(), null, '    '));
 }
 
 geowiki.prototype.save_all = function() {
