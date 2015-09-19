@@ -2,6 +2,7 @@ var page_param;
 var map;
 
 window.onload = function() {
+  call_hooks('init');
   page_param = page_resolve_url_params();
 
   var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
