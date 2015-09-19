@@ -26,7 +26,8 @@ geowiki.prototype.default_properties = {
   },
   'marker': {
     'marker-symbol': 'marker',
-    'marker-size': 'medium'
+    'marker-size': 'medium',
+    'marker-color': '#444444'
   }
 };
 
@@ -79,6 +80,11 @@ geowiki.prototype.property_form_def = function(layer) {
       'type': 'radio',
       'values': { 'small': 'small', 'medium': 'medium', 'large': 'large' },
       'default': 'medium'
+    };
+    ret['marker-color'] = {
+      'name': 'Marker Color',
+      'type': 'color',
+      'default': '#444444'
     };
   }
 
@@ -354,7 +360,10 @@ geowiki.prototype.apply_properties = function(data) {
   if('marker-symbol' in data) {
     var size = { 'small': '12', 'medium': '18', 'large': '24' }[data['marker-size'] || 'medium'];
     ret.icon = L.icon({
-      iconUrl: 'icons/' + data['marker-symbol'] + '-' + size + '.svg',
+      iconUrl: 'marker.php?' +
+        'marker-symbol=' + encodeURIComponent(data['marker-symbol']) +
+        '&marker-size=' + encodeURIComponent(data['marker-size']) +
+        '&marker-color=' + encodeURIComponent(data['marker-color']),
       iconSize: [ size, size ]
     });
   }
