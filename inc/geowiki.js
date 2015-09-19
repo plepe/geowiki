@@ -25,6 +25,7 @@ geowiki.prototype.default_properties = {
     'fill-opacity': 0.2
   },
   'marker': {
+    'marker-symbol': 'marker'
   }
 };
 
@@ -67,6 +68,11 @@ geowiki.prototype.property_form_def = function(layer) {
   }
 
   if(layer instanceof L.Marker) {
+    ret['marker-symbol'] = {
+      'name': 'Marker Icon',
+      'type': 'select',
+      'values': maki_icons
+    };
   }
 
   return ret;
@@ -85,6 +91,9 @@ geowiki.prototype.load_data = function(data) {
     }.bind(this),
     style: function(feature) {
       return this.apply_properties(feature.properties);
+    }.bind(this),
+    pointToLayer: function(feature, latlng) {
+      return new L.Marker(latlng, this.apply_properties(feature.properties));
     }.bind(this)
   });
   map.addLayer(this.drawItems);
@@ -111,7 +120,8 @@ geowiki.prototype.load_data = function(data) {
         shapeOptions: this.apply_properties(this.default_properties.polygon)
       },
       marker: {
-        shapeOptions: this.apply_properties(this.default_properties.marker)
+        shapeOptions: this.apply_properties(this.default_properties.marker),
+        icon: this.apply_properties(this.default_properties.marker).icon
       }
     },
     edit: {
@@ -273,8 +283,11 @@ geowiki.prototype.show_property_form = function(layer) {
     var data = this.property_form.get_data();
     layer.feature.properties = data;
 
+    var style = this.apply_properties(data)
     if(layer.setStyle)
-      layer.setStyle(this.apply_properties(data));
+      layer.setStyle(style);
+    if(style.icon)
+      layer.setIcon(style.icon);
     layer.editing.disable();
 
     var pos = layer._popup._latlng;
@@ -331,6 +344,11 @@ geowiki.prototype.apply_properties = function(data) {
     ret.fillColor = data['fill'];
   if('fill-opacity' in data)
     ret.fillOpacity = data['fill-opacity'];
+  if('marker-symbol' in data)
+    ret.icon = L.icon({
+      iconUrl: 'icons/' + data['marker-symbol'] + '-24.svg',
+      iconSize: [ 24, 24 ]
+    });
 
   return ret;
 }
