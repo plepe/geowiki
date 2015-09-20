@@ -338,16 +338,21 @@ geowiki.prototype.show_property_form = function(layer) {
   submit.type = 'button';
   submit.value = 'Cancel';
   submit.onclick = function(layer, data) {
-    var data = this.property_form.get_orig_data();
-    layer.feature.properties = data;
-
-    var style = this.apply_properties(data)
-    if(layer.setStyle)
-      layer.setStyle(style);
-    if(style.icon)
-      layer.setIcon(style.icon);
-
     layer.editing.disable();
+
+    if(!layer.feature.properties) {
+      this.drawItems.removeLayer(layer);
+    }
+    else {
+      var data = this.property_form.get_orig_data();
+      layer.feature.properties = data;
+
+      var style = this.apply_properties(data)
+      if(layer.setStyle)
+        layer.setStyle(style);
+      if(style.icon)
+        layer.setIcon(style.icon);
+    }
 
     this.editor_div.style.display = 'none';
   }.bind(this, layer);
