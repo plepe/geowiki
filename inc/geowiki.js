@@ -311,6 +311,11 @@ geowiki.prototype.show_property_form = function(layer) {
   submit.type = 'button';
   submit.value = 'Save';
   submit.onclick = function(layer, data) {
+    if(!this.property_form.is_complete()) {
+      this.property_form.show_errors();
+      return;
+    }
+
     var data = this.property_form.get_data();
     layer.feature.properties = data;
 
