@@ -218,24 +218,36 @@ geowiki.prototype.load_changes = function() {
   }.bind(this));
 }
 
-geowiki.prototype.create_popup = function(layer) {
+/**
+ * bind a popup on the current layer from current data
+ * @param item layer A Leaflet Layer (e.g. Marker, Polygon, ...)
+ * @param object data Override properties of the current object (by default
+ *   the properties of the current object are used)
+ * @return null
+ */
+geowiki.prototype.create_popup = function(layer, data) {
   var div = document.createElement('div');
 
-  if(layer.feature && layer.feature.properties) {
-    if(layer.feature.properties.title) {
+  if(!data) {
+    if(layer.feature && layer.feature.properties)
+      data = layer.feature.properties;
+  }
+
+  if(data) {
+    if(data.title) {
       var wrap = document.createElement('div');
       wrap.className = 'title';
       div.appendChild(wrap);
 
-      wrap.innerHTML = htmlspecialchars(layer.feature.properties.title);
+      wrap.innerHTML = htmlspecialchars(data.title);
     }
 
-    if(layer.feature.properties.description) {
+    if(data.description) {
       var wrap = document.createElement('div');
       wrap.className = 'description';
       div.appendChild(wrap);
 
-      wrap.innerHTML = htmlspecialchars(layer.feature.properties.description);
+      wrap.innerHTML = htmlspecialchars(data.description);
     }
   }
 
