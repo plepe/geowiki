@@ -319,6 +319,21 @@ geowiki.prototype.show_property_form = function(layer) {
   this.editor_div.style.display = 'block';
   this.property_form.show(this.editor_div);
 
+  this.property_form.onchange = function() {
+    var data = this.property_form.get_data();
+    console.log(data);
+
+    var style = this.apply_properties(data)
+    if(layer.setStyle)
+      layer.setStyle(style);
+    if(style.icon)
+      layer.setIcon(style.icon);
+
+    var pos = layer._popup._latlng;
+    this.create_popup(layer, data);
+    layer.openPopup(pos);
+  }.bind(this);
+
   var submit = document.createElement('input');
   submit.type = 'button';
   submit.value = 'Save';
