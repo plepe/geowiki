@@ -319,6 +319,7 @@ geowiki.prototype.show_property_form = function(layer) {
       layer.setStyle(style);
     if(style.icon)
       layer.setIcon(style.icon);
+
     layer.editing.disable();
 
     var pos = layer._popup._latlng;
@@ -335,8 +336,17 @@ geowiki.prototype.show_property_form = function(layer) {
 
   var submit = document.createElement('input');
   submit.type = 'button';
-  submit.value = 'Close';
+  submit.value = 'Cancel';
   submit.onclick = function(layer, data) {
+    var data = this.property_form.get_orig_data();
+    layer.feature.properties = data;
+
+    var style = this.apply_properties(data)
+    if(layer.setStyle)
+      layer.setStyle(style);
+    if(style.icon)
+      layer.setIcon(style.icon);
+
     layer.editing.disable();
 
     this.editor_div.style.display = 'none';
