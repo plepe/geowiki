@@ -285,9 +285,11 @@ geowiki.prototype.edit_map_properties = function(layer) {
   submit.onclick = function() {
     this.properties = this.map_properties_form.get_data();
 
-    this.save_map_properties();
-
-    this.editor_div.style.display = 'none';
+    this.save_map_properties(function(success) {
+      if(success) {
+        this.editor_div.style.display = 'none';
+      }
+    }.bind(this));
   }.bind(this);
   this.editor_div.appendChild(submit);
 
@@ -467,10 +469,12 @@ geowiki.prototype.save_all = function() {
   }.bind(this));
 }
 
-geowiki.prototype.save_map_properties = function() {
-  ajax('save_map_properties', page_param, json_readable_encode(this.properties), function(result) {
+geowiki.prototype.save_map_properties = function(callback) {
+  ajax('save_map_properties', page_param, json_readable_encode(this.properties), function(callback, result) {
     if(!result) {
       alert("An unknown error occured when saving data!");
+      callback(false);
+      return;
     }
 
     if(result.saved === true) {
@@ -481,16 +485,15 @@ geowiki.prototype.save_map_properties = function() {
 
       if(result.rev)
         this.param.rev = result.rev;
-
-      return;
     }
 
     if(result.error) {
       alert("An error occured when saving: " +  result.error);
     }
 
+    callback(result.saved);
     // saved.
-  }.bind(this));
+  }.bind(this, callback));
 }
 
 geowiki.prototype.save_feature = function(layer) {
