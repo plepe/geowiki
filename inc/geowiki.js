@@ -265,11 +265,6 @@ geowiki.prototype.edit_map_properties = function(layer) {
       'type': 'text',
       'name': 'Title'
     },
-    'id': {
-      'type': 'text',
-      'name': 'ID',
-      'check': [ 'not_regexp', /[\-\(\)\'"`\[\]\n\t!$%&\+\*,\.\/:;=<>\?\\\{\}\^\|\~]/, "Do not use special characters!" ]
-    },
     'description': {
       'type': 'textarea',
       'name': 'Description'
@@ -277,9 +272,6 @@ geowiki.prototype.edit_map_properties = function(layer) {
   };
 
   this.map_properties_form = new form('map_properties', form_def);
-
-  if(!this.properties.id)
-    this.properties.id = this.param.id;
 
   this.map_properties_form.set_data(this.properties);
 

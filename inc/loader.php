@@ -201,16 +201,20 @@ function ajax_save_map_properties($param, $postdata) {
 
   $data = json_decode($postdata, true);
 
-  if(array_key_exists('id', $data) && ($data['id'] != $param['id'])) {
-    if(!check_param($data))
-      return array(
-        'saved' => false,
-        'error' => 'Invalid ID',
-      );
+  if(array_key_exists('title', $data)) {
+    $data['id'] = str_to_id($data['title']);
 
-    git_exec("mv " . shell_escape($param['id']) . " " . shell_escape($data['id']));
+    if($data['id'] != $param['id']) {
+      if(!check_param($data))
+        return array(
+          'saved' => false,
+          'error' => 'Invalid ID',
+        );
 
-    $param['id'] = $data['id'];
+      git_exec("mv " . shell_escape($param['id']) . " " . shell_escape($data['id']));
+
+      $param['id'] = $data['id'];
+    }
   }
 
   // create directory for map data
