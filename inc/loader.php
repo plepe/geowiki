@@ -205,6 +205,12 @@ function ajax_save_map_properties($param, $postdata) {
     $data['id'] = str_to_id($data['title']);
 
     if($data['id'] != $param['id']) {
+      if(file_exists("{$data_path}/{$data['id']}"))
+        return array(
+          'saved' => false,
+          'error' => 'Title is already used, please choose a different one',
+        );
+
       if(!check_param($data))
         return array(
           'saved' => false,
