@@ -3,6 +3,13 @@
 <?php call_hooks('init'); ?>
 <?php session_start(); ?>
 <?php $auth = new Auth(); ?>
+<?php
+if((isset($auth_config['require-group'])) && (!$auth->access($auth_config['require-group']))) {
+  page_reload("auth.php");
+  print "Access denied";
+  exit(0);
+}
+?>
 <!DOCTYPE html>
 <html>
 <head>
