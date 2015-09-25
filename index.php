@@ -1,6 +1,8 @@
 <?php include "conf.php"; /* load a local configuration */ ?>
 <?php include "modulekit/loader.php"; /* loads all php-includes */ ?>
 <?php call_hooks('init'); ?>
+<?php session_start(); ?>
+<?php $auth = new Auth(); ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -24,6 +26,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 </head>
 <body>
+<?php
+$auth_display = new AuthDisplay($auth);
+print $auth_display->show();
+?>
 Available maps:<ul>
 <?php
 $d = opendir($data_path);

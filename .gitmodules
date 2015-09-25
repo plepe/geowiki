@@ -16,3 +16,6 @@
 [submodule "lib/modulekit/adv_exec"]
 	path = lib/modulekit/adv_exec
 	url = https://github.com/plepe/adv_exec.git
+[submodule "lib/modulekit/auth"]
+	path = lib/modulekit/auth
+	url = https://github.com/plepe/modulekit-auth.git
