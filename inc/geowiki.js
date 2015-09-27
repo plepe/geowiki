@@ -32,16 +32,23 @@ geowiki.prototype.default_properties = {
 };
 
 geowiki.prototype.feature_fields = function() {
-  var ret = {
-    'title': {
-      'name': 'Title',
-      'type': 'text'
-    },
-    'description': {
-      'name': 'Description',
-      'type': 'textarea'
-    }
-  };
+  var ret;
+
+  if(this.properties.fields) {
+    ret = JSON.parse(JSON.stringify(this.properties.fields));
+  }
+  else {
+    ret = {
+      'title': {
+        'name': 'Title',
+        'type': 'text'
+      },
+      'description': {
+        'name': 'Description',
+        'type': 'textarea'
+      }
+    };
+  }
 
   return ret;
 }
@@ -275,15 +282,63 @@ geowiki.prototype.edit_map_properties = function(layer) {
       'type': 'textarea',
       'name': 'Description'
     },
+    'fields': {
+      'type': 'hash',
+      'name': 'Fields',
+      'desc': 'Define which fields should be collected for each map feature',
+      'default': 1,
+      'button:add_element': 'Add another field',
+      'key_def': {
+        'type': 'text',
+        'name': 'Key',
+        'default_func': { 'js':
+          function(value, form_element, form) {
+            if(!('name' in form_element.form_parent.elements))
+              return null;
+
+            var key = form_element.form_parent.elements.name.get_data();
+            if(!key)
+              return null;
+
+            key = str_to_id(key);
+
+            return key;
+          }
+        }
+      },
+      'def': {
+        'type': 'form',
+        'def': {
+          'name': {
+            'type': 'text',
+            'name': 'Name',
+            'weight': -1
+          },
+          'type': {
+            'type': 'select',
+            'name': 'Type',
+            'values': {
+              'text': 'Text, single line',
+              'textarea': 'Text, multiple lines'
+            },
+            'default': 'text'
+          }
+        }
+      }
+    }
   };
 
   this.map_properties_form = new form('map_properties', form_def);
 
-  this.map_properties_form.set_data(this.properties);
-
   this.editor_div.innerHTML = '';
   this.editor_div.style.display = 'block';
   this.map_properties_form.show(this.editor_div);
+
+  var data = JSON.parse(JSON.stringify(this.properties));
+  if(!('fields' in data))
+    data.fields = this.feature_fields();
+
+  this.map_properties_form.set_data(data);
 
   var submit = document.createElement('input');
   submit.type = 'button';
