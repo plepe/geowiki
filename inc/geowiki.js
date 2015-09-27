@@ -3,7 +3,7 @@ function geowiki(map, param) {
   this.param = param;
   this.properties = null;
 
-  this.editor_div = document.getElementById('property-editor');
+  this.editor_div = document.getElementById('editor');
   this.editor_div.style.display = 'none';
 
   ajax('load', this.param, null, this.load_data.bind(this));
