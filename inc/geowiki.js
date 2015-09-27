@@ -262,6 +262,23 @@ geowiki.prototype.create_popup = function(layer, data) {
 
       wrap.innerHTML = htmlspecialchars(data.description);
     }
+
+    var fields = this.feature_fields();
+    for(var k in fields) {
+      var field = fields[k];
+
+      if((k == 'title') || (k == 'description'))
+        continue;
+      if(!data[k])
+        continue;
+
+      var wrap = document.createElement('div');
+      wrap.className = 'field_' + k;
+      div.appendChild(wrap);
+
+      wrap.innerHTML = '<b>' + htmlspecialchars(field.name) + ':</b> ' + htmlspecialchars(data[k]);
+    }
+
   }
 
   var edit_link = document.createElement('a');
