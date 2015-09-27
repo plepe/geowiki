@@ -31,7 +31,7 @@ geowiki.prototype.default_properties = {
   }
 };
 
-geowiki.prototype.property_form_def = function(layer) {
+geowiki.prototype.feature_fields = function() {
   var ret = {
     'title': {
       'name': 'Title',
@@ -42,6 +42,12 @@ geowiki.prototype.property_form_def = function(layer) {
       'type': 'textarea'
     }
   };
+
+  return ret;
+}
+
+geowiki.prototype.property_form_def = function(layer) {
+  var ret = this.feature_fields();
 
   if(layer instanceof L.Polygon) {
     ret['fill'] = {
