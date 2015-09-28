@@ -4,7 +4,8 @@ function geowiki(map, param) {
   this.properties = null;
 
   this.editor_div = document.getElementById('editor');
-  this.editor_div.style.display = 'none';
+  this.editor_wrapper_div = document.getElementById('editor-wrapper');
+  this.editor_wrapper_div.style.display = 'none';
 
   ajax('load', this.param, null, this.load_data.bind(this));
 
@@ -348,7 +349,7 @@ geowiki.prototype.edit_map_properties = function(layer) {
   this.map_properties_form = new form('map_properties', form_def);
 
   this.editor_div.innerHTML = '';
-  this.editor_div.style.display = 'block';
+  this.editor_wrapper_div.style.display = 'block';
   this.map_properties_form.show(this.editor_div);
 
   var data = JSON.parse(JSON.stringify(this.properties));
@@ -365,7 +366,7 @@ geowiki.prototype.edit_map_properties = function(layer) {
 
     this.save_map_properties(function(success) {
       if(success) {
-        this.editor_div.style.display = 'none';
+        this.editor_wrapper_div.style.display = 'none';
       }
     }.bind(this));
   }.bind(this);
@@ -388,7 +389,7 @@ geowiki.prototype.show_property_form = function(layer) {
   }
 
   this.editor_div.innerHTML = '';
-  this.editor_div.style.display = 'block';
+  this.editor_wrapper_div.style.display = 'block';
   this.property_form.show(this.editor_div);
 
   this.property_form.onchange = function() {
@@ -431,7 +432,7 @@ geowiki.prototype.show_property_form = function(layer) {
     layer.openPopup(pos);
 
     this.save_feature(layer, function(success) {
-      this.editor_div.style.display = 'none';
+      this.editor_wrapper_div.style.display = 'none';
     }.bind(this));
 
     // TODO: update title
@@ -458,7 +459,7 @@ geowiki.prototype.show_property_form = function(layer) {
         layer.setIcon(style.icon);
     }
 
-    this.editor_div.style.display = 'none';
+    this.editor_wrapper_div.style.display = 'none';
   }.bind(this, layer);
   this.editor_div.appendChild(submit);
 
@@ -470,7 +471,7 @@ geowiki.prototype.show_property_form = function(layer) {
     this.drawItems.removeLayer(layer);
     this.save_remove_feature(layer);
 
-    this.editor_div.style.display = 'none';
+    this.editor_wrapper_div.style.display = 'none';
   }.bind(this, layer);
   this.editor_div.appendChild(submit);
 
