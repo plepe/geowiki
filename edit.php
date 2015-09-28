@@ -43,11 +43,9 @@ if(check_param($_REQUEST)) {
           <span id="title"><?php print $name; ?></span>
         </div>
 	<div id="map"></div>
-        <div id="editor-wrapper">
-          <div>
-            <div id="editor"></div>
-          </div>
-        </div>
+        <div id="editor-wrapper"><div>
+          <form id="editor"></form>
+        </div></div>
         <div id="menu" class='leaflet-control leaflet-bar'>
           <a id="menu_download"><img class='custom-icon' src='images/data-transfer-download.svg' alt='Download' title='Download' /></a>
         </div>
