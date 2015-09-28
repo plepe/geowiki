@@ -380,6 +380,8 @@ geowiki.prototype.edit_map_properties = function(layer) {
   this.editor_div.appendChild(submit);
 
   this.map_properties_form.resize();
+
+  this.editor_wrapper_div.firstChild.scrollTop = 0;
 }
 
 geowiki.prototype.show_property_form = function(layer) {
@@ -486,6 +488,8 @@ geowiki.prototype.show_property_form = function(layer) {
   layer.editing.enable();
 
   this.property_form.resize();
+
+  this.editor_wrapper_div.firstChild.scrollTop = 0;
 }
 
 geowiki.prototype.apply_properties = function(data) {
