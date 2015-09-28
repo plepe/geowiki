@@ -362,6 +362,11 @@ geowiki.prototype.edit_map_properties = function(layer) {
   submit.type = 'submit';
   submit.value = 'Save';
   this.editor_div.onsubmit = function() {
+    if(!this.map_properties_form.is_complete()) {
+      this.map_properties_form.show_errors();
+      return false;
+    }
+
     this.properties = this.map_properties_form.get_data();
 
     this.save_map_properties(function(success) {
@@ -415,7 +420,7 @@ geowiki.prototype.show_property_form = function(layer) {
   this.editor_div.onsubmit = function(layer, data) {
     if(!this.property_form.is_complete()) {
       this.property_form.show_errors();
-      return;
+      return false;
     }
 
     var data = this.property_form.get_data();
