@@ -48,6 +48,7 @@ if(check_param($_REQUEST)) {
         </div></div>
         <div id="menu" class='leaflet-control leaflet-bar'>
           <a id="menu_download"><img class='custom-icon' src='images/data-transfer-download.svg' alt='Download' title='Download' /></a>
+          <a id='menu_osm'><img class='custom-icon' src='images/osm_logo.svg' alt='OpenStreetMap' title='Import data from OpenStreetMap' /></a>
         </div>
 </body>
 </html>

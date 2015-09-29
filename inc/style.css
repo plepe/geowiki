@@ -25,6 +25,7 @@ body {
   left: 0px;
   right: 0px;
 }
+.editor-wrapper,
 #editor-wrapper {
   position: absolute;
   top: 46px;
@@ -34,6 +35,7 @@ body {
   box-sizing: content-box;
   pointer-events: none;
 }
+.editor-wrapper > div,
 #editor-wrapper > div {
   border-radius: 4px;
   box-shadow: 0 1px 5px rgba(0, 0, 0, 0.65);
