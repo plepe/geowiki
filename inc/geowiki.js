@@ -3,8 +3,9 @@ function geowiki(map, param) {
   this.param = param;
   this.properties = null;
 
-  this.editor_div = document.getElementById('property-editor');
-  this.editor_div.style.display = 'none';
+  this.editor_div = document.getElementById('editor');
+  this.editor_wrapper_div = document.getElementById('editor-wrapper');
+  this.editor_wrapper_div.style.display = 'none';
 
   ajax('load', this.param, null, this.load_data.bind(this));
 
@@ -31,17 +32,30 @@ geowiki.prototype.default_properties = {
   }
 };
 
+geowiki.prototype.feature_fields = function() {
+  var ret;
+
+  if(this.properties.fields) {
+    ret = JSON.parse(JSON.stringify(this.properties.fields));
+  }
+  else {
+    ret = {
+      'title': {
+        'name': 'Title',
+        'type': 'text'
+      },
+      'description': {
+        'name': 'Description',
+        'type': 'textarea'
+      }
+    };
+  }
+
+  return ret;
+}
+
 geowiki.prototype.property_form_def = function(layer) {
-  var ret = {
-    'title': {
-      'name': 'Title',
-      'type': 'text'
-    },
-    'description': {
-      'name': 'Description',
-      'type': 'textarea'
-    }
-  };
+  var ret = this.feature_fields();
 
   if(layer instanceof L.Polygon) {
     ret['fill'] = {
@@ -249,6 +263,23 @@ geowiki.prototype.create_popup = function(layer, data) {
 
       wrap.innerHTML = htmlspecialchars(data.description);
     }
+
+    var fields = this.feature_fields();
+    for(var k in fields) {
+      var field = fields[k];
+
+      if((k == 'title') || (k == 'description'))
+        continue;
+      if(!data[k])
+        continue;
+
+      var wrap = document.createElement('div');
+      wrap.className = 'field_' + k;
+      div.appendChild(wrap);
+
+      wrap.innerHTML = '<b>' + htmlspecialchars(field.name) + ':</b> ' + htmlspecialchars(data[k]);
+    }
+
   }
 
   var edit_link = document.createElement('a');
@@ -269,31 +300,88 @@ geowiki.prototype.edit_map_properties = function(layer) {
       'type': 'textarea',
       'name': 'Description'
     },
+    'fields': {
+      'type': 'hash',
+      'name': 'Fields',
+      'desc': 'Define which fields should be collected for each map feature',
+      'default': 1,
+      'button:add_element': 'Add another field',
+      'key_def': {
+        'type': 'text',
+        'name': 'Key',
+        'default_func': { 'js':
+          function(value, form_element, form) {
+            if(!('name' in form_element.form_parent.elements))
+              return null;
+
+            var key = form_element.form_parent.elements.name.get_data();
+            if(!key)
+              return null;
+
+            key = str_to_id(key);
+
+            return key;
+          }
+        }
+      },
+      'def': {
+        'type': 'form',
+        'def': {
+          'name': {
+            'type': 'text',
+            'name': 'Name',
+            'weight': -1
+          },
+          'type': {
+            'type': 'select',
+            'name': 'Type',
+            'values': {
+              'text': 'Text, single line',
+              'textarea': 'Text, multiple lines'
+            },
+            'default': 'text'
+          }
+        }
+      }
+    }
   };
 
   this.map_properties_form = new form('map_properties', form_def);
 
-  this.map_properties_form.set_data(this.properties);
-
   this.editor_div.innerHTML = '';
-  this.editor_div.style.display = 'block';
+  this.editor_wrapper_div.style.display = 'block';
   this.map_properties_form.show(this.editor_div);
 
+  var data = JSON.parse(JSON.stringify(this.properties));
+  if(!('fields' in data))
+    data.fields = this.feature_fields();
+
+  this.map_properties_form.set_data(data);
+
   var submit = document.createElement('input');
-  submit.type = 'button';
+  submit.type = 'submit';
   submit.value = 'Save';
-  submit.onclick = function() {
+  this.editor_div.onsubmit = function() {
+    if(!this.map_properties_form.is_complete()) {
+      this.map_properties_form.show_errors();
+      return false;
+    }
+
     this.properties = this.map_properties_form.get_data();
 
     this.save_map_properties(function(success) {
       if(success) {
-        this.editor_div.style.display = 'none';
+        this.editor_wrapper_div.style.display = 'none';
       }
     }.bind(this));
+
+    return false;
   }.bind(this);
   this.editor_div.appendChild(submit);
 
   this.map_properties_form.resize();
+
+  this.editor_wrapper_div.firstChild.scrollTop = 0;
 }
 
 geowiki.prototype.show_property_form = function(layer) {
@@ -310,7 +398,7 @@ geowiki.prototype.show_property_form = function(layer) {
   }
 
   this.editor_div.innerHTML = '';
-  this.editor_div.style.display = 'block';
+  this.editor_wrapper_div.style.display = 'block';
   this.property_form.show(this.editor_div);
 
   this.property_form.onchange = function() {
@@ -329,12 +417,12 @@ geowiki.prototype.show_property_form = function(layer) {
   }.bind(this);
 
   var submit = document.createElement('input');
-  submit.type = 'button';
+  submit.type = 'submit';
   submit.value = 'Save';
-  submit.onclick = function(layer, data) {
+  this.editor_div.onsubmit = function(layer, data) {
     if(!this.property_form.is_complete()) {
       this.property_form.show_errors();
-      return;
+      return false;
     }
 
     var data = this.property_form.get_data();
@@ -353,10 +441,11 @@ geowiki.prototype.show_property_form = function(layer) {
     layer.openPopup(pos);
 
     this.save_feature(layer, function(success) {
-      this.editor_div.style.display = 'none';
+      this.editor_wrapper_div.style.display = 'none';
     }.bind(this));
 
     // TODO: update title
+    return false;
   }.bind(this, layer);
   this.editor_div.appendChild(submit);
 
@@ -380,7 +469,7 @@ geowiki.prototype.show_property_form = function(layer) {
         layer.setIcon(style.icon);
     }
 
-    this.editor_div.style.display = 'none';
+    this.editor_wrapper_div.style.display = 'none';
   }.bind(this, layer);
   this.editor_div.appendChild(submit);
 
@@ -392,13 +481,15 @@ geowiki.prototype.show_property_form = function(layer) {
     this.drawItems.removeLayer(layer);
     this.save_remove_feature(layer);
 
-    this.editor_div.style.display = 'none';
+    this.editor_wrapper_div.style.display = 'none';
   }.bind(this, layer);
   this.editor_div.appendChild(submit);
 
   layer.editing.enable();
 
   this.property_form.resize();
+
+  this.editor_wrapper_div.firstChild.scrollTop = 0;
 }
 
 geowiki.prototype.apply_properties = function(data) {
