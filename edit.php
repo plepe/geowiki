@@ -20,6 +20,7 @@
 	
 	<script src="lib/leaflet/leaflet.js"></script>
 	<script src="lib/leaflet.draw/leaflet.draw.js"></script>
+	<script src="lib/leaflet.polylineDecorator/leaflet.polylineDecorator.js"></script>
 
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
