@@ -16,7 +16,11 @@ geowiki.prototype.default_properties = {
   'polyline': {
     'stroke': '#ff0000',
     'stroke-width': 2,
-    'stroke-opacity': 0.8
+    'stroke-opacity': 0.8,
+    'marker-start-symbol': null,
+    'marker-start-size': 'medium',
+    'marker-end-symbol': null,
+    'marker-end-size': 'medium'
   },
   'polygon': {
     'stroke': '#ff0000',
@@ -57,6 +61,16 @@ geowiki.prototype.feature_fields = function() {
 geowiki.prototype.property_form_def = function(layer) {
   var ret = this.feature_fields();
 
+  var maki_icons_values = {};
+  for(var i = 0; i < maki_icons.length; i++) {
+    maki_icons_values[maki_icons[i].icon] = {
+      name: maki_icons[i].name,
+      desc: "<img src='icons/" + maki_icons[i].icon + "-12.svg'>" +
+            "<img src='icons/" + maki_icons[i].icon + "-18.svg'>" +
+            "<img src='icons/" + maki_icons[i].icon + "-24.svg'>"
+    };
+  }
+
   if(layer instanceof L.Polygon) {
     ret['fill'] = {
       'name': 'Fill Color',
@@ -81,15 +95,29 @@ geowiki.prototype.property_form_def = function(layer) {
       'name': 'Stroke Opacity',
       'type': 'float'
     };
-  }
-
-  var maki_icons_values = {};
-  for(var i = 0; i < maki_icons.length; i++) {
-    maki_icons_values[maki_icons[i].icon] = {
-      name: maki_icons[i].name,
-      desc: "<img src='icons/" + maki_icons[i].icon + "-12.svg'>" +
-            "<img src='icons/" + maki_icons[i].icon + "-18.svg'>" +
-            "<img src='icons/" + maki_icons[i].icon + "-24.svg'>"
+    ret['marker-start-symbol'] = {
+      'name': 'Head Icon',
+      'type': 'select',
+      'values': maki_icons_values,
+      'desc': "<a href='https://www.mapbox.com/maki/'>List of Maki icons</a>."
+    };
+    ret['marker-start-size'] = {
+      'name': 'Head icon size',
+      'type': 'radio',
+      'values': { 'small': 'small', 'medium': 'medium', 'large': 'large' },
+      'default': 'medium'
+    };
+    ret['marker-end-symbol'] = {
+      'name': 'Tail Icon',
+      'type': 'select',
+      'values': maki_icons_values,
+      'desc': "<a href='https://www.mapbox.com/maki/'>List of Maki icons</a>."
+    };
+    ret['marker-end-size'] = {
+      'name': 'Tail icon size',
+      'type': 'radio',
+      'values': { 'small': 'small', 'medium': 'medium', 'large': 'large' },
+      'default': 'medium'
     };
   }
 
@@ -125,6 +153,7 @@ geowiki.prototype.load_data = function(data) {
 
   this.drawItems = new L.GeoJSON(data, {
     onEachFeature: function(feature, layer) {
+      this.decorate(layer, feature.properties);
       this.create_popup(layer);
     }.bind(this),
     style: function(feature) {
@@ -384,6 +413,50 @@ geowiki.prototype.edit_map_properties = function(layer) {
   this.editor_wrapper_div.firstChild.scrollTop = 0;
 }
 
+geowiki.prototype.decorate = function(layer, data) {
+  var style = this.apply_properties(data)
+
+  if(layer.decorator) {
+    map.removeLayer(layer.decorator);
+    delete layer.decorator;
+  }
+
+  var patterns = [];
+
+  if(style.startIcon) {
+    patterns.push({
+      offset: 0,
+      repeat: 0,
+      symbol: L.Symbol.marker({
+        rotate: true,
+        markerOptions: {
+          icon: style.startIcon
+        }
+      })
+    });
+  }
+
+  if(style.endIcon) {
+    patterns.push({
+      offset: '100%',
+      repeat: 0,
+      symbol: L.Symbol.marker({
+        rotate: true,
+        markerOptions: {
+          icon: style.endIcon
+        }
+      })
+    });
+  }
+
+  if(patterns.length) {
+    layer.decorator = L.polylineDecorator(layer, {
+      patterns: patterns
+    });
+    layer.decorator.addTo(map);
+  }
+}
+
 geowiki.prototype.show_property_form = function(layer) {
   this.property_form = new form('data', this.property_form_def(layer));
 
@@ -410,6 +483,8 @@ geowiki.prototype.show_property_form = function(layer) {
       layer.setStyle(style);
     if(style.icon)
       layer.setIcon(style.icon);
+
+    this.decorate(layer, data);
 
     var pos = layer._popup._latlng;
     this.create_popup(layer, data);
@@ -514,6 +589,26 @@ geowiki.prototype.apply_properties = function(data) {
         'marker-symbol=' + encodeURIComponent(data['marker-symbol']) +
         '&marker-size=' + encodeURIComponent(data['marker-size']) +
         '&marker-color=' + encodeURIComponent(data['marker-color']),
+      iconSize: [ size, size ]
+    });
+  }
+  if(data['marker-start-symbol']) {
+    var size = { 'small': '12', 'medium': '18', 'large': '24' }[data['marker-start-size'] || 'medium'];
+    ret.startIcon = L.icon({
+      iconUrl: 'marker.php?' +
+        'marker-symbol=' + encodeURIComponent(data['marker-start-symbol']) +
+        '&marker-size=' + encodeURIComponent(data['marker-start-size']) +
+        '&marker-color=' + encodeURIComponent(data['stroke']),
+      iconSize: [ size, size ]
+    });
+  }
+  if(data['marker-end-symbol']) {
+    var size = { 'small': '12', 'medium': '18', 'large': '24' }[data['marker-end-size'] || 'medium'];
+    ret.endIcon = L.icon({
+      iconUrl: 'marker.php?' +
+        'marker-symbol=' + encodeURIComponent(data['marker-end-symbol']) +
+        '&marker-size=' + encodeURIComponent(data['marker-end-size']) +
+        '&marker-color=' + encodeURIComponent(data['stroke']),
       iconSize: [ size, size ]
     });
   }
