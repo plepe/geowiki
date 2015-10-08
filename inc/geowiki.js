@@ -396,7 +396,7 @@ geowiki.prototype.edit_map_properties = function(layer) {
       return false;
     }
 
-    this.properties = this.map_properties_form.get_data();
+    this.properties = update_properties(this.properties, this.map_properties_form.get_data());
 
     this.save_map_properties(function(success) {
       if(success) {
@@ -476,7 +476,6 @@ geowiki.prototype.show_property_form = function(layer) {
 
   this.property_form.onchange = function() {
     var data = this.property_form.get_data();
-    console.log(data);
 
     var style = this.apply_properties(data)
     if(layer.setStyle)
@@ -501,7 +500,7 @@ geowiki.prototype.show_property_form = function(layer) {
     }
 
     var data = this.property_form.get_data();
-    layer.feature.properties = data;
+    layer.feature.properties = update_properties(layer.feature.properties, data);
 
     var style = this.apply_properties(data)
     if(layer.setStyle)
