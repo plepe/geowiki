@@ -428,7 +428,7 @@ geowiki.prototype.decorate = function(layer, data) {
       offset: 0,
       repeat: 0,
       symbol: L.Symbol.marker({
-        rotate: true,
+        rotate: 180,
         markerOptions: {
           icon: style.startIcon
         }
