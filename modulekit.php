@@ -25,6 +25,7 @@ $include['js']=array(
   'inc/bootstrap.js',
   'inc/geowiki.js',
   'inc/functions.js',
+  'inc/update_properties.js',
 );
 $include['css']=array(
   'inc/style.css',
