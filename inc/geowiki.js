@@ -10,31 +10,31 @@ function geowiki(map, param) {
   ajax('load', this.param, null, this.load_data.bind(this));
 
   window.setInterval(this.load_changes.bind(this), 10000);
-}
 
-geowiki.prototype.default_properties = {
-  'polyline': {
-    'stroke': '#ff0000',
-    'stroke-width': 2,
-    'stroke-opacity': 0.8,
-    'marker-start-symbol': null,
-    'marker-start-size': 'medium',
-    'marker-end-symbol': null,
-    'marker-end-size': 'medium'
-  },
-  'polygon': {
-    'stroke': '#ff0000',
-    'stroke-width': 2,
-    'stroke-opacity': 0.8,
-    'fill': '#7f0000',
-    'fill-opacity': 0.2
-  },
-  'marker': {
-    'marker-symbol': 'marker',
-    'marker-size': 'medium',
-    'marker-color': '#444444'
-  }
-};
+  this.default_properties = {
+    'polyline': {
+      'stroke': '#ff0000',
+      'stroke-width': 2,
+      'stroke-opacity': 0.8,
+      'marker-start-symbol': null,
+      'marker-start-size': 'medium',
+      'marker-end-symbol': null,
+      'marker-end-size': 'medium'
+    },
+    'polygon': {
+      'stroke': '#ff0000',
+      'stroke-width': 2,
+      'stroke-opacity': 0.8,
+      'fill': '#7f0000',
+      'fill-opacity': 0.2
+    },
+    'marker': {
+      'marker-symbol': 'marker',
+      'marker-size': 'medium',
+      'marker-color': '#444444'
+    }
+  };
+}
 
 geowiki.prototype.feature_fields = function() {
   var ret;
