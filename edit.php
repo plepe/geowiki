@@ -1,5 +1,7 @@
 <?php include "conf.php"; /* load a local configuration */ ?>
 <?php include "modulekit/loader.php"; /* loads all php-includes */ ?>
+<?php session_start(); ?>
+<?php Header("Content-Type: text/html; charset=utf8"); ?>
 <?php call_hooks('init'); ?>
 <!DOCTYPE html>
 <html>
