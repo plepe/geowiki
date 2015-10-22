@@ -43,3 +43,9 @@ $auth_config=array(
 // > htpasswd -d .htpasswd USERNAME
 // Note: '-d' uses a weak password algorithm; other htpasswd algorithms are not
 // compatible with PHP as of version 5.4
+
+// User settings configuration (if enabled)
+$auth_user_settings_config = array(
+  'type' => 'file',
+  'path' => 'data/user_settings/',
+);

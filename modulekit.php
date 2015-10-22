@@ -12,6 +12,8 @@ $description="Collaborative editing of public and private personalized maps";
 $depend=array('hooks', 'modulekit-form', 'modulekit-ajax', 'json_readable_encode', 'page', 'str_to_id', 'adv_exec', 'shell_escape', 'resize_listener',
   'modulekit-auth-user-menu',
   'modulekit-auth-js',
+  'modulekit-auth-user-settings-js',
+  'modulekit-auth-user-settings-page',
 );
 
 // these modules will also be loaded if this module is loaded, but
