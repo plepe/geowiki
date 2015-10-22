@@ -3,6 +3,9 @@
 <?php session_start(); ?>
 <?php Header("Content-Type: text/html; charset=utf8"); ?>
 <?php call_hooks('init'); ?>
+<?php
+$user_menu = auth_user_menu();
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -52,5 +55,6 @@ if(check_param($_REQUEST)) {
         <div id="menu" class='leaflet-control leaflet-bar'>
           <a id="menu_download"><img class='custom-icon' src='images/data-transfer-download.svg' alt='Download' title='Download' /></a>
         </div>
+<?php print $user_menu; ?>
 </body>
 </html>

@@ -9,7 +9,10 @@ $description="Collaborative editing of public and private personalized maps";
 
 // these modules should be loaded first
 // * needs at least version 1.0 of module 'lang'
-$depend=array('hooks', 'modulekit-form', 'modulekit-ajax', 'json_readable_encode', 'page', 'str_to_id', 'adv_exec', 'shell_escape', 'resize_listener');
+$depend=array('hooks', 'modulekit-form', 'modulekit-ajax', 'json_readable_encode', 'page', 'str_to_id', 'adv_exec', 'shell_escape', 'resize_listener',
+  'modulekit-auth-user-menu',
+  'modulekit-auth-js',
+);
 
 // these modules will also be loaded if this module is loaded, but
 // (preferably) after this
