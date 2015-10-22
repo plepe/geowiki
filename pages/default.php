@@ -19,14 +19,14 @@ class Page_default extends Page {
           }
         }
 
-        $ret .= "<li><a href='edit.php?id={$r['filename']}'>{$name}</a></li>\n";
+        $ret .= "<li><a href='?page=edit&amp;id={$r['filename']}'>{$name}</a></li>\n";
       }
     }
     closedir($d);
 
     $ret .= "</ul>\n";
     $ret .= "Create new:<ul>\n";
-    $ret .= "<li><a href='edit.php?id=" . md5(uniqid()) . "'>empty map</a></li>\n";
+    $ret .= "<li><a href='?page=edit&amp;id=" . md5(uniqid()) . "'>empty map</a></li>\n";
     $ret .= "</ul>\n";
 
     return $ret;
