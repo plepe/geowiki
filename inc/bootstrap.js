@@ -5,6 +5,9 @@ window.onload = function() {
   call_hooks('init');
   page_param = page_resolve_url_params();
 
+  if(!window.L)
+    return;
+
   var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
     osmAttrib = '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     osm = L.tileLayer(osmUrl, {maxZoom: 18, attribution: osmAttrib});
