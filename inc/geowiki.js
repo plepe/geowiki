@@ -11,9 +11,20 @@ function geowiki(map, param) {
 
   window.setInterval(this.load_changes.bind(this), 10000);
 
+  var user_color = auth.current_user().settings().data('color');
+  if(!user_color) {
+    var x = hslToRgb(Math.random(), Math.random() * 0.2 + 0.8, Math.random() * 0.2 + 0.4);
+    user_color = '#' +
+      ("00" + x[0].toString(16)).slice(-2) +
+      ("00" + x[1].toString(16)).slice(-2) +
+      ("00" + x[2].toString(16)).slice(-2);
+
+    auth.current_user().settings().save({ 'color': user_color });
+  }
+
   this.default_properties = {
     'polyline': {
-      'stroke': '#ff0000',
+      'stroke': user_color,
       'stroke-width': 2,
       'stroke-opacity': 0.8,
       'marker-start-symbol': null,
@@ -22,16 +33,16 @@ function geowiki(map, param) {
       'marker-end-size': 'medium'
     },
     'polygon': {
-      'stroke': '#ff0000',
+      'stroke': user_color,
       'stroke-width': 2,
       'stroke-opacity': 0.8,
-      'fill': '#7f0000',
+      'fill': user_color,
       'fill-opacity': 0.2
     },
     'marker': {
       'marker-symbol': 'marker',
       'marker-size': 'medium',
-      'marker-color': '#444444'
+      'marker-color': user_color
     }
   };
 }

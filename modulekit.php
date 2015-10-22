@@ -25,6 +25,7 @@ $include=array();
 $include['php']=array(
   'inc/loader.php',
   'inc/maki.php',
+  'inc/user_settings.php',
   'pages/*.php',
 );
 $include['js']=array(
