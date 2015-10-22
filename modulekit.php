@@ -23,6 +23,7 @@ $include=array();
 $include['php']=array(
   'inc/loader.php',
   'inc/maki.php',
+  'pages/*.php',
 );
 $include['js']=array(
   'inc/bootstrap.js',
