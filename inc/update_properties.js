@@ -8,7 +8,10 @@
  * @return {object} - the updated object
  */
 function update_properties(src, upd) {
-  var ret = JSON.parse(JSON.stringify(src));
+  var ret = {};
+
+  if((typeof src != 'undefined') && src)
+    ret = JSON.parse(JSON.stringify(src));
 
   for(var k in upd) {
     if(upd[k] === null)
